@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
     required: true,
   },
@@ -15,6 +15,6 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-const UserModel = mongoose.model('User', UserSchema) || mongoose.models.User;
+const UserModel =  mongoose.model.User || mongoose.model('User', UserSchema);
 
 export default UserModel;
