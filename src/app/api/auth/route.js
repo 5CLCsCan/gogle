@@ -5,15 +5,6 @@ import { register } from "module";
 
 export async function GET(req){
     await connectDB();
-
-    const test_user = new UserModel({
-        username: "test12",
-        email: "abc1@gmail.com",
-        password: "test12"
-    });
-
-    await registerUser(test_user);
-
     return new Response("Hello from the API");
 }
 
