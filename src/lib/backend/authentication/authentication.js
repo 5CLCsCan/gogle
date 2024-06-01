@@ -72,6 +72,7 @@ async function loginUser(data){
     if(match){
         const expires = new Date(Date.now() + 90000);
         const session = await encrypt({email: email, expires: expires});
+        cookies().set("session", session, {expires: expires});
         return "Login Successful"
     }else{
         return "Login Failed"
