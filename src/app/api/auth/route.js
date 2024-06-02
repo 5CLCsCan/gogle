@@ -1,11 +1,13 @@
-import UserModel from "@/models/UserSchema.js";
 import {connectDB, addData} from "@/lib/database.js";
-import {loginUser, logoutUser, registerUser} from "@/lib/backend/authentication/authentication.js";
-import { register } from "module";
+import UserModel from "@/models/UserSchema.js";
+import {loginUser, logoutUser, registerUser, getSession} from "@/lib/backend/authentication/authentication.js";
 
 export async function GET(req){
     await connectDB();
-    return new Response("Hello from the API");
+    const sessionData = await getSession();
+    return new Response(JSON.stringify(sessionData), { 
+        headers: { 'Content-Type': 'application/json' } 
+    });
 }
 
 export async function POST(req){
@@ -16,10 +18,16 @@ export async function POST(req){
     
     try {
         const result = await loginUser(body);
-        return new Response(result);
+        
+        const sessionData = await getSession();
+        return new Response(JSON.stringify(sessionData), {
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        //return new Response(result);
     } catch (error) {
         console.log(error);
-        return new Response("Login Failed");
+        return new Response("Login Error");
     }
 }
 
