@@ -6,7 +6,8 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 
-
+// expire in 24 hours
+const expireDuration = 24 * 60 * 60 * 1000;
 const secretKey = process.env.JWT_SECRET;
 const key = new TextEncoder().encode(secretKey);
 
@@ -15,16 +16,16 @@ async function encrypt(payload) {
     return await new SignJWT(payload)
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
-        .setExpirationTime("10 sec from now")
+        .setExpirationTime("24 hours from now")
         .sign(key);
 }
 
 async function decrypt(input) {
     const { payload } = await jwtVerify(input, key, {
-      algorithms: ["HS256"]
+        algorithms: ["HS256"]
     })
     return payload;
-  }
+}
 
 async function checkEmailExist(email) {
     await connectDB();
@@ -73,7 +74,7 @@ async function loginUser(data) {
     const match = await bycript.compare(password, hashedPassword);
 
     if (match) {
-        const expires = new Date(Date.now() + 90000);
+        const expires = new Date(Date.now() + expireDuration);
         const session = await encrypt({ email: email, expires: expires });
         cookies().set("session", session, { expires: expires, httpOnly: true });
         return "Login Successful";
@@ -106,21 +107,30 @@ async function getSession() {
 }
 
 async function updateSession(request) {
-    const session = request.cookies.get("session")?.value
-    if (!session) return
+    try {
+        const session = request.cookies.get("session")?.value;
+        if (!session) return NextResponse.next(); 
 
-    // Refresh the session so it doesn't expire
-    const parsed = await decrypt(session)
-    parsed.expires = new Date(Date.now() + 90000)
-    console.log("Updated session:", parsed)
-    const res = NextResponse.next();
-    res.cookies.set({
-        name: "session",
-        value: await encrypt(parsed),
-        httpOnly: true,
-        expires: parsed.expires
-    })
-    return res;
+        const parsed = await decrypt(session);
+
+        parsed.expires = new Date(Date.now() + expireDuration);
+        console.log("Updated session:", parsed);
+
+        const encryptedSession = await encrypt(parsed);
+
+        const res = NextResponse.next();
+        res.cookies.set({
+            name: "session",
+            value: encryptedSession,
+            httpOnly: true,
+            expires: parsed.expires,
+        });
+
+        return res;
+    } catch (error) {
+        console.error("Error in updateSession:", error);
+        return NextResponse.next();
+    }
 }
 
 

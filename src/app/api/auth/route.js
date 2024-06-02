@@ -18,13 +18,8 @@ export async function POST(req){
     
     try {
         const result = await loginUser(body);
-        
-        const sessionData = await getSession();
-        return new Response(JSON.stringify(sessionData), {
-            headers: { 'Content-Type': 'application/json' }
-        });
 
-        //return new Response(result);
+        return new Response(result);
     } catch (error) {
         console.log(error);
         return new Response("Login Error");
