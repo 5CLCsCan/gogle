@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <main className='flex flex-col items-center px-24'>
       <motion.section
-        className='flex flex-col w-[80%] items-center justify-between gap-20 mb-20 mt-14'
+        className='flex flex-col items-center justify-between gap-20 mb-20 mt-14'
         initial={{
           opacity: 0,
           y: 100,
@@ -32,7 +32,7 @@ export default function Home() {
         }}
         {...motionProps}
       >
-        <div className='flex w-full justify-evenly gap-20'>
+        <div className='flex w-full lg:w-[80%] justify-evenly gap-20'>
           <div className='flex flex-col gap-4'>
             <h1
               className={cn(
@@ -54,11 +54,15 @@ export default function Home() {
               personalized itineraries, find hidden gems, and optimize your
               journey effortlessly.
             </p>
-            <Button className='w-6/12 text-3xl rounded-full px-2 py-10'>
+            <Button className='w-fit text-3xl rounded-full px-10 py-10'>
               Create trip now!
             </Button>
           </div>
-          <img src='https://placeholder.co/500' alt='placeholder' />
+          <img
+            className='hidden lg:block'
+            src='https://placeholder.co/500'
+            alt='placeholder'
+          />
         </div>
       </motion.section>
       <motion.section
