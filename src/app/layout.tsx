@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -31,6 +32,36 @@ export default function RootLayout({
           </div>
         </header>
         {children}
+        <footer className='mt-20 flex px-60 justify-between py-8'>
+          <Image src='/logo.svg' alt='logo' width={100} height={100} />
+          <section className='flex flex-col'>
+            <h3 className='font-bold text-lg'>Gogle</h3>
+            <ul>
+              <li>About Us</li>
+              <li>Help</li>
+              <li>FAQs</li>
+              <li>Teams</li>
+            </ul>
+          </section>
+          <section className='flex flex-col'>
+            <h3 className='font-bold text-lg'>Gogle</h3>
+            <ul>
+              <li>About Us</li>
+              <li>Help</li>
+              <li>FAQs</li>
+              <li>Teams</li>
+            </ul>
+          </section>
+          <section className='flex flex-col'>
+            <h3 className='font-bold text-lg'>Gogle</h3>
+            <ul>
+              <li>About Us</li>
+              <li>Help</li>
+              <li>FAQs</li>
+              <li>Teams</li>
+            </ul>
+          </section>
+        </footer>
       </body>
     </html>
   );
