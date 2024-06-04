@@ -21,9 +21,13 @@ export default function RootLayout({
       <body className={cn('min-h-screen flex flex-col', inter.className)}>
         <header className='flex justify-between px-24 py-8'>
           <img src='/logo.svg' alt='logo' />
-          <div>
-            <Button className='bg-transparent text-[#0077B6]'>Login</Button>
-            <Button className='bg-[#0077B6] rounded-full'>Sign Up</Button>
+          <div className='flex gap-2'>
+            <Button className='bg-transparent text-md hover:bg-transparent rounded-full text-primary hover:opacity-80'>
+              Login
+            </Button>
+            <Button className='bg-[#0077B6] text-md rounded-full'>
+              Sign Up
+            </Button>
           </div>
         </header>
         {children}
