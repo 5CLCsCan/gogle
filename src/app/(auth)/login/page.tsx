@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Poppins } from 'next/font/google';
@@ -16,6 +17,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '600'] });
 
@@ -27,6 +29,7 @@ const loginSchema = z.object({
 });
 
 export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
   const loginForm = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -73,12 +76,36 @@ export default function LoginPage() {
             control={loginForm.control}
             name='password'
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
+              <FormItem className='relative'>
+                <div className='flex justify-between items-center'>
+                  <FormLabel>Password</FormLabel>
+                  <Button
+                    type='button'
+                    variant='ghost'
+                    size='sm'
+                    className='h-auto'
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? (
+                      <>
+                        <EyeSlashIcon className='size-4 text-black mr-1' />
+                        Hide
+                      </>
+                    ) : (
+                      <>
+                        <EyeIcon className='size-4 text-black mr-1' />
+                        Show
+                      </>
+                    )}
+                    <span className='sr-only'>
+                      {showPassword ? 'Hide password' : 'Show password'}
+                    </span>
+                  </Button>
+                </div>
                 <FormControl>
                   <Input
                     {...field}
-                    type='password'
+                    type={showPassword ? 'text' : 'password'}
                     placeholder='Enter your password'
                   />
                 </FormControl>
