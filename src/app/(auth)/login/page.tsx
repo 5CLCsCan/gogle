@@ -127,7 +127,7 @@ export default function LoginPage() {
         </form>
       </Form>
       <section className='w-full flex items-center flex-col gap-1'>
-        <p className='text-md text-gray-600'>Don't have an account yet?</p>
+        <p className='text-md text-gray-600'>Don&#39;t have an account yet?</p>
         <Button
           variant='outline'
           className='rounded-full text-primary hover:text-primary border-black text-lg py-6 font-normal lg:w-1/4'
