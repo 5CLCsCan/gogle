@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Poppins } from 'next/font/google';
 import { motion } from 'framer-motion';
 import { LucideCircleChevronDown } from 'lucide-react';
+import SparklesText from '@/components/magicui/sparkles-text';
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '600'] });
 
@@ -75,9 +76,20 @@ export default function Home() {
         }}
         {...motionProps}
       >
-        <h2 className={cn('text-5xl text-center', poppins.className)}>
-          Your <span className='text-primary font-bold'>AI-powered</span> Trip
-        </h2>
+        <motion.h2
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+          }}
+          {...motionProps}
+          className={cn('text-5xl text-center', poppins.className)}
+        >
+          Your{' '}
+          <SparklesText text='AI-powered' className='text-primary font-bold' />{' '}
+          Trip
+        </motion.h2>
         <div className='grid grid-cols-7 grid-rows-2 gap-4 auto-rows-min'>
           <motion.img
             src='https://placeholder.co/600?text='
