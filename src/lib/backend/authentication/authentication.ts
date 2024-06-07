@@ -3,7 +3,6 @@ import { JWTPayload, SignJWT, jwtVerify } from 'jose';
 import { connectDB, addData, findData } from "@/lib/database";
 import UserModel from "@/models/UserSchema";
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
 
 const expireDuration = 24 * 60 * 60 * 1000;
 const secretKey = process.env.JWT_SECRET!;
@@ -112,32 +111,5 @@ async function getSession(): Promise<Payload | null> {
     return null;
   }
 }
-
-async function updateSession(request: NextRequest): Promise<NextResponse> {
-  try {
-    const session = request.cookies.get("session")?.value;
-    if (!session) return NextResponse.next(); 
-
-    const parsed = await decrypt(session);
-
-    parsed.expires = new Date(Date.now() + expireDuration);
-
-    const encryptedSession = await encrypt(parsed);
-
-    const res = NextResponse.next();
-    res.cookies.set({
-      name: "session",
-      value: encryptedSession,
-      httpOnly: true,
-      expires: parsed.expires,
-    });
-
-    return res;
-  } catch (error) {
-    console.error("Error in updateSession:", error);
-    return NextResponse.next();
-  }
-}
-
-export { registerUser, loginUser, logoutUser, getSession, updateSession };
+export { registerUser, loginUser, logoutUser, getSession, decrypt, encrypt};
 
