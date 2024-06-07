@@ -1,17 +1,9 @@
 import bcrypt from 'bcryptjs';
-import { JWTPayload, SignJWT, jwtVerify } from 'jose';
 import { connectDB, addData, findData } from "@/lib/database";
 import UserModel from "@/models/UserSchema";
 import { cookies } from "next/headers";
+import {encrypt, decrypt, expireDuration, Payload} from "./session"
 
-const expireDuration = 24 * 60 * 60 * 1000;
-const secretKey = process.env.JWT_SECRET!;
-const key = new TextEncoder().encode(secretKey);
-
-interface Payload extends JWTPayload{
-  email: string;
-  expires: Date;
-}
 
 interface RegisterUserData {
   username: string;
@@ -24,20 +16,6 @@ interface LoginUserData {
   password: string;
 }
 
-async function encrypt(payload: Payload): Promise<string> {
-  return await new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("24h")
-    .sign(key);
-}
-
-async function decrypt(input: string): Promise<Payload> {
-  const { payload } = await jwtVerify(input, key, {
-    algorithms: ["HS256"]
-  });
-  return payload as Payload;
-}
 
 async function checkEmailExist(email: string): Promise<boolean> {
   await connectDB();

@@ -1,7 +1,30 @@
-import { NextRequest, NextResponse } from "next/server";
-import {decrypt, encrypt} from "@/lib/backend/authentication/authentication"
+import { NextRequest, NextResponse } from "next/server"
+import { JWTPayload, SignJWT, jwtVerify } from 'jose';
 
 const expireDuration = 24 * 60 * 60 * 1000;
+const secretKey = process.env.JWT_SECRET!;
+const key = new TextEncoder().encode(secretKey);
+
+interface Payload extends JWTPayload{
+    email: string;
+    expires: Date;
+  }
+
+
+async function encrypt(payload: Payload): Promise<string> {
+    return await new SignJWT(payload)
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("24h")
+      .sign(key);
+  }
+  
+  async function decrypt(input: string): Promise<Payload> {
+    const { payload } = await jwtVerify(input, key, {
+      algorithms: ["HS256"]
+    });
+    return payload as Payload;
+  }
 
 async function updateSession(request: NextRequest): Promise<NextResponse> {
     try {
@@ -30,4 +53,4 @@ async function updateSession(request: NextRequest): Promise<NextResponse> {
   }
   
 
-  export {updateSession};
+  export {updateSession, encrypt, decrypt, expireDuration, type Payload};
