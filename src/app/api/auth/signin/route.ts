@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
     const response = await loginUser({ email, password });
 
-    return response;
+    return new NextResponse(JSON.stringify(response), { status: 200 });
   } catch (error) {
     console.error("Error logging in user:", error);
     return new NextResponse(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
