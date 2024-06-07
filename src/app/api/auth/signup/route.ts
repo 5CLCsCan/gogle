@@ -3,6 +3,7 @@ import { registerUser } from '@/lib/backend/authentication/authentication';
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Request:', request);
     const { username, email, password } = await request.json();
 
     console.log('Request:', { username, email, password });
