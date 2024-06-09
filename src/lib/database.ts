@@ -81,4 +81,17 @@ async function findAndUpdateData<T extends Document>(model: Model<T>, query: any
   }
 }
 
-export { connectDB, addData, findData, findAndUpdateData };
+async function deleteData<T extends Document>(model: Model<T>, query: any): Promise<boolean> {
+  try {
+    await model
+      .deleteOne(query)
+      .exec();
+    return true;
+  }
+  catch (err) {
+    console.error("Error deleting data:", err);
+    return false;
+  }
+}
+
+export { connectDB, addData, findData, findAndUpdateData, deleteData };
