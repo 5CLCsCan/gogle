@@ -4,7 +4,7 @@ const MONGO_URI = process.env.MONGO_URI as string;
 
 if (!MONGO_URI) {
   throw new Error(
-    "Please define the MONGO_URI environment variable inside .env.local",
+    "Please define the MONGO_URI environment variable inside .env.local"
   );
 }
 
@@ -57,8 +57,11 @@ async function addData<T extends Document>(data: T): Promise<boolean> {
   }
 }
 
-async function findData<T extends Document>(model: Model<T>, query: any): Promise<T[] | null> {
-  await connectDB();  
+async function findData<T extends Document>(
+  model: Model<T>,
+  query: any
+): Promise<T[] | null> {
+  await connectDB();
   try {
     const result = await model.find(query);
     if (result.length === 0) {
@@ -71,10 +74,14 @@ async function findData<T extends Document>(model: Model<T>, query: any): Promis
   }
 }
 
-async function findAndUpdateData<T extends Document>(model: Model<T>, query: any, update: any): Promise<T | null> {
+async function findAndUpdateData<T extends Document>(
+  model: Model<T>,
+  query: any,
+  update: any
+): Promise<T | null> {
   await connectDB();
   try {
-    return await model.findOneAndUpdate(query, update, { new: true }) || null;
+    return (await model.findOneAndUpdate(query, update, { new: true })) || null;
   } catch (err) {
     console.error("Error finding and updating data:", err);
     return null;

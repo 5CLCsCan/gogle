@@ -1,8 +1,8 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 import { connectDB, addData, findData } from "@/lib/database";
 import UserModel from "@/models/UserSchema";
-import {encrypt, decrypt} from './jwt';
-import { Payload } from './jwt';
+import { encrypt, decrypt } from "./jwt";
+import { Payload } from "./jwt";
 import { cookies } from "next/headers";
 
 const expiredDuration = 24 * 60 * 60 * 1000;
@@ -18,8 +18,7 @@ interface LoginUserData {
   password: string;
 }
 
-interface TokenObject
-{
+interface TokenObject {
   error: string;
   token: string;
 }
@@ -36,7 +35,7 @@ async function checkEmailExist(email: string): Promise<boolean> {
   return user.length > 0;
 }
 
-async function registerUser(data: RegisterUserData): Promise<TokenObject>{
+async function registerUser(data: RegisterUserData): Promise<TokenObject> {
   const { username, email, password } = data;
 
   if (await checkEmailExist(email)) {
@@ -66,9 +65,8 @@ async function loginUser(data: LoginUserData): Promise<TokenObject> {
   if (!match) {
     return { error: "Invalid email or password", token: "" } as TokenObject;
   }
-  
+
   return await generateToken(email);
 }
 
-export { registerUser, loginUser, generateToken};
-
+export { registerUser, loginUser, generateToken };
