@@ -1,7 +1,3 @@
-// import { ICategoryPoint } from './ICategoryPoint';
-// import { UserState } from './UserState';
-// import { UserFilter } from './UserFilter';
-// import { Ultils, placeCategory, getMainCategory, categoryEvaluate, timePeriods } from './Ultils';
 import { ICategoryPoint } from '@/lib/backend/recommendation/category/ICategoryPoint';
 import { UserState } from '@/lib/backend/recommendation/category/userState';
 import { UserFilter } from '@/lib/backend/recommendation/category/userFilter';

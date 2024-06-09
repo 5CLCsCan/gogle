@@ -1,15 +1,14 @@
 import recommendationSystem, { RecommendationSystem } from '@/lib/backend/recommendation/category/recommendationSystem';
 import { UserState } from '@/lib/backend/recommendation/category/userState';
 import { UserFilter } from '@/lib/backend/recommendation/category/userFilter';
-import { RankingSystem } from '@/lib/backend/recommendation/category/rankingSystem';
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
     try {
         const url = new URL(req.url);
         const search_params = new URLSearchParams(url.searchParams);
-        
-        
+
+
         const userSatiation = search_params.get('satiation');
         const userTiredness = search_params.get('tiredness');
         const userThirsty = search_params.get('thirsty');
@@ -26,16 +25,16 @@ export async function GET(req: NextRequest) {
             const thirsty = parseFloat(userThirsty);
             userState.thirsty = thirsty;
         }
-        
 
-        
+
+
         const chosenPlace = search_params.get('chosenPlace');
         var places: string[] = [];
         if (chosenPlace) {
             places = JSON.parse(chosenPlace);
         }
 
-        
+
         const startTime = search_params.get('startTime');
         const date = search_params.get('date');
         const maxDistance = search_params.get('maxDistance');
@@ -66,7 +65,7 @@ export async function GET(req: NextRequest) {
             filter.setFavouriteCategories(favouriteCategories);
         }
 
-        
+
         recommendationSystem.setUserState(userState);
         recommendationSystem.setChosenPlace(places);
         recommendationSystem.setFilter(filter);

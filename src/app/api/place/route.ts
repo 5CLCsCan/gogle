@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
         const data: GetPlaceData = { placeID: placeID };
 
         const status = await getPlace(data);
-        return new Response(JSON.stringify({ status: status, data: data }));
+        return new Response(JSON.stringify(data));
     } catch (error) {
         console.error("Error in GET /api/getPlace:", error);
         return new Response(JSON.stringify({ status: false }));
