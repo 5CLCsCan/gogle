@@ -47,6 +47,7 @@ async function connectDB(): Promise<typeof mongoose> {
 }
 
 async function addData<T extends Document>(data: T): Promise<boolean> {
+  await connectDB();
   try {
     await data.save();
     return true;
@@ -57,8 +58,13 @@ async function addData<T extends Document>(data: T): Promise<boolean> {
 }
 
 async function findData<T extends Document>(model: Model<T>, query: any): Promise<T[] | null> {
+  await connectDB();  
   try {
-    return await model.find(query);
+    const result = await model.find(query);
+    if (result.length === 0) {
+      return null;
+    }
+    return result;
   } catch (err) {
     console.error("Error finding data:", err);
     return null;
@@ -66,6 +72,7 @@ async function findData<T extends Document>(model: Model<T>, query: any): Promis
 }
 
 async function findAndUpdateData<T extends Document>(model: Model<T>, query: any, update: any): Promise<T | null> {
+  await connectDB();
   try {
     return await model.findOneAndUpdate(query, update, { new: true }) || null;
   } catch (err) {
