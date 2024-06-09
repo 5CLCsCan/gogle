@@ -6,9 +6,11 @@ export async function POST(request: NextRequest) {
   try{
     const data = await request.json();
     const { email, password } = data;
-    console.log
     const result = await loginUser({ email, password });
     console.log(result);
+    if (result.error != "") {
+      return new NextResponse(JSON.stringify(result), { status: 401 });
+    }
     return new NextResponse(JSON.stringify(result), jsonHeader);
   }
   catch(err){

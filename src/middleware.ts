@@ -5,11 +5,12 @@ export async function middleware(request: NextRequest) {
     // get token from bearer token
     const token = request.headers.get('Authorization')?.split('Bearer ')[1];
     if (!token) {
-        return NextResponse.json({error: "Token not existed"});
+        return NextResponse.json({error: "Token not existed"}, {status: 401});
     }
 
     // decrypt token
     const { pathname } = request.nextUrl;
+    console.log(pathname);
     const result = await decrypt(token);
     if (result.error){
         if (result.error === 'Token expired' && pathname === "/api/auth/gettoken"){
@@ -21,12 +22,12 @@ export async function middleware(request: NextRequest) {
                 }
             });
         }
-        else return NextResponse.json(result);
+        else return NextResponse.json({error: result.error, details: result.details}, {status: 401});
     }
     request.headers.set('decoded', JSON.stringify(result.payload));
     return NextResponse.next();
 }
  
 export const config = {
-    matcher: ['/api/auth/((?!signin|signup).*)']
+    matcher: ['/api/auth/:path((?!signin|signup$).*)']
 }
