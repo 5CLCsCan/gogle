@@ -8,25 +8,13 @@ export class UserState {
     maxTiredness: number;
     maxThirsty: number;
 
-    constructor(maxSatiation: string = "1.5", maxTiredness: string = "1.5", maxThirsty: string = "1") {
+    constructor(maxSatiation: number = 1.5, maxTiredness: number = 1.5, maxThirsty: number = 1) {
         this.satiation = 0;
         this.tiredness = 0;
         this.thirsty = 0;
-        if (maxSatiation === "") {
-            this.maxSatiation = 1.5;
-        } else {
-            this.maxSatiation = parseFloat(maxSatiation);
-        }
-        if (maxTiredness === "") {
-            this.maxTiredness = 1.5;
-        } else {
-            this.maxTiredness = parseFloat(maxTiredness);
-        }
-        if (maxThirsty === "") {
-            this.maxThirsty = 1;
-        } else {
-            this.maxThirsty = parseFloat(maxThirsty);
-        }
+        this.maxSatiation = maxSatiation;
+        this.maxTiredness = maxTiredness;
+        this.maxThirsty = maxThirsty;
     }
 
     getLowestStateIndex(): number {
