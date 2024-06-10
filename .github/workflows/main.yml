@@ -17,8 +17,8 @@ jobs:
       - name: Install dependencies
         run: cd src && npm install
 
-      - name: Build Next.js project
-        run: cd src && npm run build
+      - name: Linting
+        run: cd src && npm run lint
 
       - name: Deploy to Vercel
         run: vercel --prod src/
