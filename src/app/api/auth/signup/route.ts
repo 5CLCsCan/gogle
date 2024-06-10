@@ -1,26 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { registerUser } from '@/lib/backend/authentication/authentication';
+import { NextRequest, NextResponse } from "next/server";
+import { registerUser } from "@/lib/backend/authentication/authentication";
+import { jsonHeader } from "@/lib/backend/header/jsonheader";
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('Request:', request);
-    const { username, email, password } = await request.json();
-
-    console.log('Request:', { username, email, password });
-
-    if (!username || !email || !password) {
-      return new NextResponse(JSON.stringify({ message: 'Missing required fields' }), { status: 400 });
+    const data = await request.json();
+    const result = await registerUser(data);
+    if (result.error == "Email already exists") {
+      return new NextResponse(JSON.stringify(result), { status: 409 });
     }
-
-    const response = await registerUser({ username, email, password });
-
-    if (response.status === 200) {
-      return new NextResponse(JSON.stringify({ message: 'User Registered Successfully' }), { status: 200 });
-    } else {
-      return new NextResponse(JSON.stringify({ message: response.statusText }), { status: 400 });
-    }
-  } catch (error) {
-    console.error('Error registering user:', error);
-    return new NextResponse(JSON.stringify({ message: 'Internal Server Error' }), { status: 500 });
+    return new NextResponse(JSON.stringify(result), jsonHeader);
+  } catch (err) {
+    console.error("Error in signup route:", err);
+    return new NextResponse(
+      JSON.stringify({ error: "Internal Server Error", token: "" }),
+      jsonHeader
+    );
   }
 }
