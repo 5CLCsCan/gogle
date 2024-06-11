@@ -2,6 +2,20 @@ import recommendationSystem from '@/lib/backend/recommendation/category/recommen
 import { NextRequest } from 'next/server';
 import { parseUserState, parseChosenPlaces, parseUserFilter } from '@/lib/backend/recommendation/category/parser';
 
+/**
+ * @param req 
+ * req.query: {
+ *      satiation: number,
+ *      tiredness: number,
+ *      thirsty: number,
+ *      chosenPlace: string[],
+ *      startTime: number,
+ *      date: string,
+ *      maxDistance: number,
+ *      numberOfPeople: number,
+ *      favouriteCategories: string[]
+ * }
+ */
 export async function GET(req: NextRequest) {
     try {
         const url = new URL(req.url);

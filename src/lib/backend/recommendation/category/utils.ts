@@ -1,6 +1,7 @@
 export class Ultils {
-    static getCurrentTimePeriod() {
-        const currentHour = new Date().getHours();
+    static getCurrentTimePeriod(currentHour: number | null) {
+        if (currentHour === null) currentHour = new Date().getHours();
+
         if (currentHour >= 6 && currentHour < 15) {
             return 'morning';
         } else if (currentHour >= 15 && currentHour < 18) {
@@ -51,7 +52,7 @@ export const getMainCategory: { [key: string]: string } = {
     'nha-sach-thu-vien': 'entertain'
 };
 
-export class HumanStatus {
+export class HumanEffectEvaluation {
     satiation: number;
     thirsty: number;
     tiredness: number;
@@ -62,17 +63,17 @@ export class HumanStatus {
     }
 }
 
-export const categoryEvaluate: { [key: string]: HumanStatus } = {
-    "feast": new HumanStatus(0.8, 0, -0.5),
-    "snack": new HumanStatus(0.6, 0, -0.3),
-    "drink": new HumanStatus(0, 0.8, 0),
-    "explore": new HumanStatus(-0.5, -0.2, 0.7),
-    "entertain": new HumanStatus(-0.5, -0.2, 0.5)
+export const categoryEvaluate: { [key: string]: HumanEffectEvaluation } = {
+    "feast": new HumanEffectEvaluation(0.8, 0, -0.5),
+    "snack": new HumanEffectEvaluation(0.6, 0, -0.3),
+    "drink": new HumanEffectEvaluation(0, 0.8, 0),
+    "explore": new HumanEffectEvaluation(-0.5, -0.2, 0.7),
+    "entertain": new HumanEffectEvaluation(-0.5, -0.2, 0.5)
 };
 
 export const timePeriods = {
     "morning": ['food/bar-pub', 'food/beer-club', 'food/quan-nhau', 'entertain/karaoke'],
     "afternoon": ['travel/Khu-du-lich', 'food/bar-pub', 'food/beer-club', 'food/quan-nhau'],
     "night": ['travel/Khu-du-lich', 'travel/cong-vien-vui-choi', 'travel/bao-tang-di-tich', 'nha-sach-thu-vien'],
-    "lateNight": []
+    "lateNight": ['travel/Khu-du-lich', 'travel/cong-vien-vui-choi', 'travel/bao-tang-di-tich', 'nha-sach-thu-vien']
 };

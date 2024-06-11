@@ -1,4 +1,4 @@
-import { HumanStatus, getMainCategory, categoryEvaluate } from '@/lib/backend/recommendation/category/utils';
+import { HumanEffectEvaluation, getMainCategory, categoryEvaluate } from '@/lib/backend/recommendation/category/utils';
 
 export class UserState {
     satiation: number;
@@ -8,13 +8,13 @@ export class UserState {
     maxTiredness: number;
     maxThirsty: number;
 
-    constructor(maxSatiation: number = 1.5, maxTiredness: number = 1.5, maxThirsty: number = 1) {
-        this.satiation = 0;
-        this.tiredness = 0;
-        this.thirsty = 0;
-        this.maxSatiation = maxSatiation;
-        this.maxTiredness = maxTiredness;
-        this.maxThirsty = maxThirsty;
+    constructor(satiation: number = 0, tiredness: number = 0, thirsty: number = 0) {
+        this.maxSatiation = 1.5;
+        this.maxTiredness = 1.5;
+        this.maxThirsty = 1;
+        this.satiation = satiation;
+        this.tiredness = tiredness;
+        this.thirsty = thirsty;
     }
 
     getLowestStateIndex(): number {
@@ -30,7 +30,7 @@ export class UserState {
         } else {
             for (let i = 0; i < chosenPlace.length; i++) {
                 const mainCategory = getMainCategory[chosenPlace[i]];
-                const point: HumanStatus = categoryEvaluate[mainCategory];
+                const point: HumanEffectEvaluation = categoryEvaluate[mainCategory];
                 if (point === undefined) {
                     console.log(`Error at ${chosenPlace[i]}: is not in categoryEvaluate`);
                     return;

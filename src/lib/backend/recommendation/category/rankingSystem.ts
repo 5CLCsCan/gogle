@@ -1,7 +1,7 @@
 import { ICategoryPoint } from '@/lib/backend/recommendation/category/ICategoryPoint';
 import { UserState } from '@/lib/backend/recommendation/category/userState';
 import { UserFilter } from '@/lib/backend/recommendation/category/userFilter';
-import { Ultils, placeCategory, getMainCategory, categoryEvaluate, timePeriods, HumanStatus } from '@/lib/backend/recommendation/category/utils';
+import { Ultils, placeCategory, getMainCategory, categoryEvaluate, timePeriods, HumanEffectEvaluation } from '@/lib/backend/recommendation/category/utils';
 
 export class RankingSystem {
     categoryPoints: ICategoryPoint[];
@@ -23,7 +23,7 @@ export class RankingSystem {
         for (let i = 0; i < this.categoryPoints.length; i++) {
             const temp = this.categoryPoints[i].category;
             const mainCategory = getMainCategory[temp];
-            const point: HumanStatus = categoryEvaluate[mainCategory];
+            const point: HumanEffectEvaluation = categoryEvaluate[mainCategory];
             if (userState.satiation + point.satiation > userState.maxSatiation) {
                 this.categoryPoints[i].point -= 10;
                 console.log(`${this.categoryPoints[i].category} -> ${this.categoryPoints[i].point} : satiation is too high`);
@@ -63,8 +63,8 @@ export class RankingSystem {
     }
 
     rankingTime(time: number) {
-        const currentTimePeriod = Ultils.getCurrentTimePeriod();
-        console.log(`current time: ${currentTimePeriod}`);
+        const currentTimePeriod = Ultils.getCurrentTimePeriod(time);
+        console.log(`current time: ${currentTimePeriod} - ${time}`);
         for (let i = 0; i < timePeriods[currentTimePeriod].length; i++) {
             let index = -1;
             for (let j = 0; j < this.categoryPoints.length; j++) {

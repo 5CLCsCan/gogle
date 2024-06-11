@@ -1,4 +1,9 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { UserState } from '@/lib/backend/recommendation/category/userState';
+import { UserFilter } from '@/lib/backend/recommendation/category/userFilter';
+
+
+
 
 // Define the interface for the Trip document
 export interface ITrip extends Document {
@@ -7,6 +12,8 @@ export interface ITrip extends Document {
   startTime: string;
   locations?: string[];
   sharedEmails: string[];
+  userState?: UserState;
+  userFilter?: UserFilter;
 }
 
 // Define the schema for the Trip model
