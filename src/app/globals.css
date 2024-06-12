@@ -77,4 +77,8 @@
     .text-primary {
       @apply text-[#0077B6]
     }
+    
+    input {
+      @apply text-foreground border border-black px-5 py-3 rounded-lg focus:outline-none;
+    }
   }
