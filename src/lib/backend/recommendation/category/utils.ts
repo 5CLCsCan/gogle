@@ -40,16 +40,16 @@ export const getMainCategory: { [key: string]: string } = {
     'food/bar-pub': 'drink',
     'food/beer-club': 'drink',
     'food/cafe': 'drink',
-    'travel/Khu-du-lich': 'explore',
-    'travel/cong-vien-vui-choi': 'explore',
-    'travel/bao-tang-di-tich': 'explore',
-    'entertain/karaoke': 'entertain',
-    'entertain/billiards': 'entertain',
-    'entertain/giai-tri': 'entertain',
-    'entertain/san-khau': 'entertain',
-    'entertain/khu-choi-game': 'entertain',
-    'shop/trung-tam-thuong-mai': 'entertain',
-    'nha-sach-thu-vien': 'entertain'
+    'travel/Khu-du-lich': 'outdoor',
+    'travel/cong-vien-vui-choi': 'outdoor',
+    'travel/bao-tang-di-tich': 'outdoor',
+    'entertain/karaoke': 'indoor',
+    'entertain/billiards': 'indoor',
+    'entertain/giai-tri': 'indoor',
+    'entertain/san-khau': 'indoor',
+    'entertain/khu-choi-game': 'indoor',
+    'shop/trung-tam-thuong-mai': 'indoor',
+    'nha-sach-thu-vien': 'indoor'
 };
 
 export class HumanEffectEvaluation {
@@ -67,8 +67,8 @@ export const categoryEvaluate: { [key: string]: HumanEffectEvaluation } = {
     "feast": new HumanEffectEvaluation(0.8, 0, -0.5),
     "snack": new HumanEffectEvaluation(0.6, 0, -0.3),
     "drink": new HumanEffectEvaluation(0, 0.8, 0),
-    "explore": new HumanEffectEvaluation(-0.5, -0.2, 0.7),
-    "entertain": new HumanEffectEvaluation(-0.5, -0.2, 0.5)
+    "outdoor": new HumanEffectEvaluation(-0.5, -0.2, 0.7),
+    "indoor": new HumanEffectEvaluation(-0.5, -0.2, 0.5)
 };
 
 export const timePeriods = {
