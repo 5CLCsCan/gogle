@@ -26,8 +26,10 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
 *                       properties:
 *                           email:
 *                               type: string
+*                               example: user@gmail.com
 *                           password:
 *                               type: string
+*                               example: IAMPASSWORD
 *       responses:
 *           200:
 *               description: Successfully signed in and returned a token
@@ -39,9 +41,11 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
 *                               error:
 *                                   type: string
 *                                   description: Empty string
+*                                   example: ""
 *                               token:
 *                                   type: string
 *                                   description: JWT token
+*                                   example: IAMTOKEN12134
 *           401:
 *               description: Invalid email or password
 *               content:
@@ -52,9 +56,11 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
 *                               error:
 *                                   type: string
 *                                   description: Invalid email or password
+*                                   example: Invalid email or password
 *                               token:
 *                                   type: string
 *                                   description: Empty string
+*                                   example: ""
 */
 
 export async function POST(request: NextRequest) {
