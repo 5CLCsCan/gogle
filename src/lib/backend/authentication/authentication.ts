@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { connectDB, addData, findData } from "@/lib/database";
+import { connectDB, addData, findData } from "@/lib/backend/database";
 import UserModel from "@/models/UserSchema";
 import { encrypt, decrypt } from "./jwt";
 import { Payload } from "./jwt";

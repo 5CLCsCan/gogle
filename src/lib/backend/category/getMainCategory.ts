@@ -1,5 +1,5 @@
 import { CategoryModel } from '@/models/CategorySchema';
-import { connectDB, findData } from '@/lib/database';
+import { connectDB, findData } from '@/lib/backend/database';
 
 export default async function getMainCategory(): Promise<string[]> {
     await connectDB();

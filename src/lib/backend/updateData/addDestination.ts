@@ -1,5 +1,5 @@
 import TripModel, { ITrip } from '@/models/TripSchema';
-import { connectDB, findData, findAndUpdateData } from '@/lib/database';
+import { connectDB, findData, findAndUpdateData } from '@/lib/backend/database';
 
 export interface AddDestinationData {
   tripID: string;

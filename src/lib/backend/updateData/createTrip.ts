@@ -1,5 +1,5 @@
 import TripModel from '@/models/TripSchema';
-import { connectDB, addData } from '@/lib/database';
+import { connectDB, addData } from '@/lib/backend/database';
 
 export interface CreateTripData {
     userEmail: string;

@@ -28,9 +28,12 @@ export async function middleware(request: NextRequest) {
       );
   }
   request.headers.set("decoded", JSON.stringify(result.payload));
-  return NextResponse.next();
+  return NextResponse.next({ 
+    request : {
+        headers: request.headers
+    }});
 }
 
 export const config = {
-  matcher: ["/api/:path((?!auth/signin|auth/signup$).*)"],
+  matcher: ["/api/:path((?!auth/signin|auth/signup|test$).*)"],
 };

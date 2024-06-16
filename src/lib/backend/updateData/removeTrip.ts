@@ -1,5 +1,5 @@
 import TripModel from '@/models/TripSchema';
-import { connectDB, deleteData } from '@/lib/database';
+import { connectDB, deleteData } from '@/lib/backend/database';
 
 export interface RemoveTripData {
     tripID: string;
