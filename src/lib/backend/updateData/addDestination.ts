@@ -1,41 +1,47 @@
-import TripModel, { ITrip } from '@/models/TripSchema';
-import { connectDB, findData, findAndUpdateData } from '@/lib/database';
+import TripModel, { ITrip } from '@/models/TripSchema'
+import { connectDB, findData, findAndUpdateData } from '@/lib/backend/database'
 
 export interface AddDestinationData {
-  tripID: string;
-  placeID: string;
+  tripID: string
+  placeID: string
 }
 
-export default async function addDestination(data: AddDestinationData): Promise<boolean> {
+export default async function addDestination(
+  data: AddDestinationData,
+): Promise<boolean> {
   try {
-    await connectDB();
+    await connectDB()
 
-    const { tripID, placeID } = data;
-    const trips: ITrip[] | null = await findData(TripModel, { _id: tripID });
+    const { tripID, placeID } = data
+    const trips: ITrip[] | null = await findData(TripModel, { _id: tripID })
 
     if (!trips || trips.length === 0) {
-      console.log("Trip not found");
-      return false;
+      console.log('Trip not found')
+      return false
     }
 
-    const trip = trips[0];
+    const trip = trips[0]
     if (!trip.locations) {
-      trip.locations = [];
+      trip.locations = []
     }
-    const updatedLocations = [...trip.locations, placeID];
+    const updatedLocations = [...trip.locations, placeID]
 
-    const update = { $set: { locations: updatedLocations } };
-    const updatedTrip: ITrip | null = await findAndUpdateData(TripModel, { _id: tripID }, update);
+    const update = { $set: { locations: updatedLocations } }
+    const updatedTrip: ITrip | null = await findAndUpdateData(
+      TripModel,
+      { _id: tripID },
+      update,
+    )
 
     if (updatedTrip) {
-      console.log("Destination added successfully");
-      return true;
+      console.log('Destination added successfully')
+      return true
     } else {
-      console.log("Failed to add destination");
-      return false;
+      console.log('Failed to add destination')
+      return false
     }
   } catch (err) {
-    console.error("Error adding destination:", err);
-    return false;
+    console.error('Error adding destination:', err)
+    return false
   }
 }
