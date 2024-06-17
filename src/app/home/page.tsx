@@ -1,4 +1,8 @@
-export default function HomePage() {
+'use client'
+
+import { withProtected } from '@/utils/withProtected'
+
+function HomePage() {
   return (
     <main className='flex flex-col px-24'>
       <h1 className='text-primary text-4xl text-center mb-10'>
@@ -27,3 +31,5 @@ export default function HomePage() {
     </main>
   )
 }
+
+export default withProtected(HomePage)
