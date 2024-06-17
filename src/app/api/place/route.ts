@@ -16,8 +16,8 @@ export async function GET(req: NextRequest) {
         }
         const data: GetPlaceData = { placeID: placeID };
 
-        const status = await getPlace(data);
-        return new Response(JSON.stringify(data));
+        const fetchedData = await getPlace(data);
+        return new Response(JSON.stringify(fetchedData));
     } catch (error) {
         console.error("Error in GET /api/getPlace:", error);
         return new Response(JSON.stringify({ status: false }));

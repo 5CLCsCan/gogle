@@ -3,6 +3,7 @@ import { UserFilter } from '@/lib/backend/recommendation/category/userFilter';
 import { RankingSystem } from '@/lib/backend/recommendation/category/rankingSystem';
 import { findData } from '@/lib/database';
 import TripModel, { ITrip } from '@/models/TripSchema';
+import getCategory from '../../updateData/getCategoryList';
 
 export class RecommendationSystem {
     userState: UserState;
@@ -36,7 +37,7 @@ export class RecommendationSystem {
     }
 
     setUserState(userState: UserState) {
-        this.userState?.setState(userState.satiation, userState.tiredness, userState.thirsty);
+        this.userState.setState(userState.satiation, userState.tiredness, userState.thirsty);
     }
 
     setChosenPlace(chosenPlace: string[]) {
@@ -51,8 +52,9 @@ export class RecommendationSystem {
                 return;
             }
             const trip = trips[0];
-            if (trip.locations) this.setChosenPlace(trip.locations);
+            const chosenPlaceCategory = await getCategory(trip.locationsID);
             if (trip.userState) this.setUserState(trip.userState);
+            if (chosenPlaceCategory) this.setChosenPlace(chosenPlaceCategory);
             if (trip.userFilter) this.setFilter(trip.userFilter);
         }
         catch (err) {
@@ -63,7 +65,6 @@ export class RecommendationSystem {
     async getTop5Recommendation(tripID: string) {
         await this.initRecommendationSystem(tripID);
         this.rankingSystem.resetScore();
-        console.log("chosen place: ", this.chosenPlace);
         this.userState.resetState(this.chosenPlace ? this.chosenPlace : []);
         this.recommend();
         return this.rankingSystem.categoryPoints;

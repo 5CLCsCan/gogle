@@ -88,10 +88,16 @@ export class RankingSystem {
     }
 
     rankingCategories(favouriteCategories: string[]) {
+        var favouritePlaceCategory: string[] = [];
+        for (const [key, value] of Object.entries(getMainCategory)) {
+            if (favouriteCategories.includes(value)) {
+                favouritePlaceCategory.push(key);
+            }
+        }
         for (let i = 0; i < this.categoryPoints.length; i++) {
             let isIncluded = false;
-            for (let j = 0; j < favouriteCategories.length; j++) {
-                if (favouriteCategories[j] === this.categoryPoints[i].category) {
+            for (let j = 0; j < favouritePlaceCategory.length; j++) {
+                if (favouritePlaceCategory[j] === this.categoryPoints[i].category) {
                     isIncluded = true;
                     break;
                 }

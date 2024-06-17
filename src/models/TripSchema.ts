@@ -4,8 +4,7 @@ import { UserFilter } from '@/lib/backend/recommendation/category/userFilter';
 
 export interface ITrip extends Document {
   userID: string;
-  locations: string[];
-  locationsCategory: string[];
+  locationsID: string[];
   userState: UserState;
   userFilter: UserFilter;
 }
@@ -15,12 +14,7 @@ const TripSchema: Schema<ITrip> = new Schema({
     type: String,
     required: true,
   },
-  locations: {
-    type: [String],
-    required: false,
-    default: [],
-  },
-  locationsCategory: {
+  locationsID: {
     type: [String],
     required: false,
     default: [],

@@ -19,12 +19,12 @@ export default async function removeDestination(data: RemoveDestinationData): Pr
     }
 
     const trip = trips[0];
-    if (!trip.locations) {
-      trip.locations = [];
+    if (!trip.locationsID) {
+      trip.locationsID = [];
     }
-    const updatedLocations = trip.locations.filter((location) => location !== placeID);
+    const updatedLocations = trip.locationsID.filter((location) => location !== placeID);
 
-    const update = { $set: { locations: updatedLocations } };
+    const update = { $set: { locationsID: updatedLocations } };
     const updatedTrip: ITrip | null = await findAndUpdateData(TripModel, { _id: tripID }, update);
 
     if (updatedTrip) {
