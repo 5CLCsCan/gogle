@@ -4,11 +4,6 @@ import getPlace, { GetPlaceData } from '@/lib/backend/updateData/getPlace';
 import removeDestination, { RemoveDestinationData } from '@/lib/backend/updateData/removeDestination';
 
 /**
- * GET /api/place : get place data base on placeID
- * @param req
- *  req.body = {
- *    placeID : string
- * }
 */
 export async function GET(req: NextRequest) {
     try {
@@ -30,12 +25,6 @@ export async function GET(req: NextRequest) {
 }
 
 /**
- * PUT /api/addPlace : add place to a trip
- * @param req
- * req.body = {
- *   tripID : string,
- *   placeID : string
- * }
 */
 export async function POST(req: NextRequest) {
     try {
@@ -54,12 +43,6 @@ export async function POST(req: NextRequest) {
 }
 
 /*
- * DELETE /api/removePlace : remove place from a trip
- * @param req
- *  req.body = {
- *    tripID : string,
- *    placeID : string
- * }
 */
 export async function DELETE(req: NextRequest) {
     try {

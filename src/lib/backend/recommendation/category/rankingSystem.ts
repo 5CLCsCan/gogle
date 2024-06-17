@@ -19,7 +19,6 @@ export class RankingSystem {
     }
 
     rankingUserState(userState: UserState) {
-        console.log(`${userState.satiation} ${userState.thirsty} ${userState.tiredness}`);
         for (let i = 0; i < this.categoryPoints.length; i++) {
             const temp = this.categoryPoints[i].category;
             const mainCategory = getMainCategory[temp];
@@ -64,8 +63,7 @@ export class RankingSystem {
 
     rankingTime(time: number) {
         const currentTimePeriod = Ultils.getCurrentTimePeriod(time);
-        console.log(`current time: ${currentTimePeriod} - ${time}`);
-        console.log(timePeriods)
+        console.log(`start time: ${currentTimePeriod} - ${time}`);
         for (let i = 0; i < timePeriods[currentTimePeriod].length; i++) {
             let index = -1;
             for (let j = 0; j < this.categoryPoints.length; j++) {

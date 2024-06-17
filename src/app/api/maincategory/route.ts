@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import getMainCategory from '@/lib/backend/category/getMainCategory';
 
+/**
+ */
 export async function GET(req: NextRequest): Promise<NextResponse> {
     try {
         const categoryList = await getMainCategory();

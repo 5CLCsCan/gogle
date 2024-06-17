@@ -79,7 +79,6 @@ async function getMainCategoryFunction(): Promise<{ [key: string]: string }> {
 
 async function categoryEvaluateFunction(): Promise<{ [key: string]: HumanEffectEvaluation }>{
     try {
-        await connectDB();
         const category = await findData(CategoryModel, { type: 'mainCategory' });
         if (!category || category.length === 0) {
             console.log("Category not found categoryEvaluate");
@@ -103,7 +102,6 @@ export { getMainCategory, categoryEvaluate };
 
 async function timePeriodsFunction(): Promise<{ [key: string]: string }> {
     try {
-        await connectDB();
         const category = await findData(CategoryModel, { type: 'timeLimit' });
         if (!category || category.length === 0) {
             console.log("Time periods not found");

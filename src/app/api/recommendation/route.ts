@@ -1,20 +1,6 @@
 import recommendationSystem from '@/lib/backend/recommendation/category/recommendationSystem';
 import { NextRequest } from 'next/server';
-import { parseUserState, parseChosenPlaces, parseUserFilter } from '@/lib/backend/recommendation/category/parser';
-
 /**
- * @param req 
- * req.query: {
- *      satiation: number,
- *      tiredness: number,
- *      thirsty: number,
- *      chosenPlace: string[],
- *      startTime: number,
- *      date: string,
- *      maxDistance: number,
- *      numberOfPeople: number,
- *      favouriteCategories: string[]
- * }
  */
 export async function GET(req: NextRequest) {
     try {
@@ -27,9 +13,7 @@ export async function GET(req: NextRequest) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-        recommendationSystem.initRecommendationSystem(tripID);
-
-        const top5Recommendations = recommendationSystem.getTop5Recommendation();
+        const top5Recommendations = await recommendationSystem.getTop5Recommendation(tripID);
         return new Response(JSON.stringify(top5Recommendations), {
             headers: { 'Content-Type': 'application/json' }
         });

@@ -23,13 +23,13 @@ export default async function addDestination(data: AddDestinationData): Promise<
       trip.locations = [];
     }
     const updatedLocations = [...trip.locations, placeID];
-
+    // const updatedLoationsCategory = [...trip.locationsCategory, placeID];
     const update = { $set: { locations: updatedLocations } };
     const updatedTrip: ITrip | null = await findAndUpdateData(TripModel, { _id: tripID }, update);
 
     if (updatedTrip) {
       console.log("Destination added successfully");
-      return true;
+      return true; 
     } else {
       console.log("Failed to add destination");
       return false;

@@ -4,6 +4,9 @@ import removeTrip, { RemoveTripData } from "@/lib/backend/updateData/removeTrip"
 
 const database = require('@/lib/database');
 
+/**
+ * 
+ */
 export async function POST(req: NextRequest) {
     try {
         console.log("POST /api/createTrip");
@@ -27,7 +30,9 @@ export async function POST(req: NextRequest) {
     }
 }
 
-
+/**
+ * 
+ */
 export async function DELETE(req: NextRequest) {
     try {
         const parseData = await req.json();
