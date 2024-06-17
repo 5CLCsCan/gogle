@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
-import useAuthRedirect from '@/hooks/useAuthRedirect'
+import { withPublic } from '@/utils/withPublic'
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '600'] })
 
@@ -32,7 +32,7 @@ const loginSchema = z.object({
   }),
 })
 
-export default function LoginPage() {
+function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false)
   const loginForm = useForm({
     resolver: zodResolver(loginSchema),
@@ -76,7 +76,7 @@ export default function LoginPage() {
     window.location.href = '/'
   }
 
-  return !useAuthRedirect() ? (
+  return (
     <main
       className={cn(
         'min-h-full flex-1 flex flex-col gap-8 items-center justify-center',
@@ -196,5 +196,7 @@ export default function LoginPage() {
         </form>
       </Form>
     </main>
-  ) : null
+  )
 }
+
+export default withPublic(SignUpPage)

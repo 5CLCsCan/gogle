@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Poppins } from 'next/font/google'
@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
-import useAuthRedirect from '@/hooks/useAuthRedirect'
+import { withPublic } from '@/utils/withPublic'
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '600'] })
 
@@ -29,7 +29,7 @@ const loginSchema = z.object({
   }),
 })
 
-export default function LoginPage() {
+function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const loginForm = useForm({
     resolver: zodResolver(loginSchema),
@@ -39,11 +39,35 @@ export default function LoginPage() {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof loginSchema>) => {
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    const respone = await fetch('/api/auth/signin', {
+      method: 'POST',
+      body: JSON.stringify(values),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!respone.ok) {
+      const data = await respone.json()
+      loginForm.setError('root', {
+        type: 'manual',
+        message: data.error,
+      })
+    } else {
+      const data = await respone.json()
+      localStorage.setItem('accessToken', data.accessToken)
+      window.location.href = '/'
+    }
   }
 
-  return !useAuthRedirect() ? (
+  useEffect(() => {
+    if (window.localStorage.getItem('accessToken')) {
+      window.location.href = '/'
+    }
+  }, [])
+
+  return (
     <main
       className={cn(
         'min-h-full flex-1 flex flex-col gap-8 items-center justify-center',
@@ -140,5 +164,7 @@ export default function LoginPage() {
         </Button>
       </section>
     </main>
-  ) : null
+  )
 }
+
+export default withPublic(LoginPage)

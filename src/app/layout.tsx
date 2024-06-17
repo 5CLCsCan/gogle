@@ -4,6 +4,8 @@ import './globals.css'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
+import Link from 'next/link'
+import Header from '@/components/Header'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,17 +22,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={cn('min-h-screen flex flex-col', inter.className)}>
-        <header className='flex justify-between px-24 py-8'>
-          <img src='/logo.svg' alt='logo' />
-          <div className='flex gap-2'>
-            <Button className='bg-transparent text-md hover:bg-transparent rounded-full text-primary hover:opacity-80'>
-              Login
-            </Button>
-            <Button className='bg-[#0077B6] text-md rounded-full'>
-              Sign Up
-            </Button>
-          </div>
-        </header>
+        <Header />
         <main className='flex-1'>{children}</main>
         <footer className='mt-20 flex px-60 justify-between py-8'>
           <Image src='/logo.svg' alt='logo' width={100} height={100} />
