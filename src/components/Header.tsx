@@ -13,25 +13,40 @@ export default function Header() {
     setIsLoading(false)
   }, [accessToken])
 
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken')
+    window.location.href = '/'
+  }
+
   return (
     <header className='flex justify-between px-24 py-8'>
       <img src='/logo.svg' alt='logo' />
       {isLoading ? (
         <></>
-      ) : accessToken ? (
-        <>
-          <Button className='bg-transparent text-md hover:bg-transparent rounded-full text-primary hover:opacity-80'>
-            <Link href={'/home'}>Home</Link>
-          </Button>
-        </>
       ) : (
         <div className='flex gap-2'>
-          <Button className='bg-transparent text-md hover:bg-transparent rounded-full text-primary hover:opacity-80'>
-            <Link href={'/login'}>Login</Link>
-          </Button>
-          <Button className='bg-[#0077B6] text-md rounded-full'>
-            <Link href={'/signup'}>Sign Up</Link>
-          </Button>
+          {accessToken ? (
+            <>
+              <Button className='bg-transparent text-md hover:bg-transparent rounded-full text-primary hover:opacity-80'>
+                <Link href={'/home'}>Home</Link>
+              </Button>
+              <Button
+                onClick={handleLogout}
+                className='bg-transparent text-md hover:bg-transparent rounded-full text-primary hover:opacity-80'
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button className='bg-transparent text-md hover:bg-transparent rounded-full text-primary hover:opacity-80'>
+                <Link href={'/login'}>Login</Link>
+              </Button>
+              <Button className='bg-[#0077B6] text-md rounded-full'>
+                <Link href={'/signup'}>Sign Up</Link>
+              </Button>
+            </>
+          )}
         </div>
       )}
     </header>

@@ -19,6 +19,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 import { withPublic } from '@/utils/withPublic'
+import ButtonLoading from '@/components/ButtonLoading'
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '600'] })
 
@@ -31,6 +32,7 @@ const loginSchema = z.object({
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const loginForm = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -40,6 +42,7 @@ function LoginPage() {
   })
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    setIsLoading(true)
     const respone = await fetch('/api/auth/signin', {
       method: 'POST',
       body: JSON.stringify(values),
@@ -47,16 +50,19 @@ function LoginPage() {
         'Content-Type': 'application/json',
       },
     })
+    setIsLoading(false)
 
     if (!respone.ok) {
       const data = await respone.json()
-      loginForm.setError('root', {
+      console.log(data)
+
+      loginForm.setError('root.generic', {
         type: 'manual',
         message: data.error,
       })
     } else {
       const data = await respone.json()
-      localStorage.setItem('accessToken', data.accessToken)
+      localStorage.setItem('accessToken', data.token)
       window.location.href = '/'
     }
   }
@@ -138,10 +144,17 @@ function LoginPage() {
               </FormItem>
             )}
           ></FormField>
+          {loginForm.formState.errors.root?.generic && (
+            <FormMessage className='text-red-500'>
+              {loginForm.formState.errors.root.generic.message}
+            </FormMessage>
+          )}
           <div className='flex flex-col gap-2'>
-            <Button className='rounded-full text-lg py-6 font-normal'>
-              Login
-            </Button>
+            <ButtonLoading
+              isLoading={isLoading}
+              text='Login'
+              onClick={loginForm.handleSubmit(onSubmit)}
+            />
             <Link
               className='text-center text-gray-500 text-sm hover:text-primary'
               href={'/register'}
