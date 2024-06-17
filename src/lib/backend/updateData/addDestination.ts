@@ -17,7 +17,7 @@ export default async function addDestination(data: AddDestinationData): Promise<
       console.log("Trip not found");
       return false;
     }
-
+    
     const trip = trips[0];
     if (!trip.locations) {
       trip.locations = [];

@@ -1,9 +1,11 @@
 import { UserState } from '@/lib/backend/recommendation/category/userState';
 import { UserFilter } from '@/lib/backend/recommendation/category/userFilter';
 import { RankingSystem } from '@/lib/backend/recommendation/category/rankingSystem';
+import { connectDB, findData } from '@/lib/database';
+import TripModel, { ITrip } from '@/models/TripSchema';
 
 export class RecommendationSystem {
-    userState: UserState | null;
+    userState: UserState;
     chosenPlace: string[] | null;
     filter: UserFilter | null;
     rankingSystem: RankingSystem;
@@ -41,11 +43,29 @@ export class RecommendationSystem {
         this.chosenPlace = chosenPlace;
     }
 
+    async initRecommendationSystem(tripID: string) {
+        try {
+            await connectDB();
+            const trips: ITrip[] | null = await findData(TripModel, { _id: tripID });
+            if (!trips || trips.length === 0) {
+                console.log("Trip not found");
+                return;
+            }
+            const trip = trips[0];
+            this.userState = trip.userState;
+            this.chosenPlace = trip.locations;
+            this.filter = trip.userFilter;
+        }
+        catch (err) {
+            console.error("Error initializing recommendation system:", err);
+        }
+    }
+
     getTop5Recommendation() {
         this.rankingSystem.resetScore();
-        this.userState?.resetState(this.chosenPlace);
+        this.userState.resetState(this.chosenPlace);
         this.recommend();
-        return this.rankingSystem.categoryPoints.slice(0, 5);
+        return this.rankingSystem.categoryPoints;
     }
 }
 

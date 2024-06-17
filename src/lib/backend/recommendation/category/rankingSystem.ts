@@ -65,6 +65,7 @@ export class RankingSystem {
     rankingTime(time: number) {
         const currentTimePeriod = Ultils.getCurrentTimePeriod(time);
         console.log(`current time: ${currentTimePeriod} - ${time}`);
+        console.log(timePeriods)
         for (let i = 0; i < timePeriods[currentTimePeriod].length; i++) {
             let index = -1;
             for (let j = 0; j < this.categoryPoints.length; j++) {

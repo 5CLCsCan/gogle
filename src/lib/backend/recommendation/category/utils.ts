@@ -1,3 +1,6 @@
+import { connectDB, findData } from "@/lib/database";
+import { CategoryModel } from "@/models/CategorySchema";
+
 export class Ultils {
     static getCurrentTimePeriod(currentHour: number | null) {
         if (currentHour === null) currentHour = new Date().getHours();
@@ -20,38 +23,6 @@ export class Ultils {
     }
 }
 
-export const placeCategory: string[] = [
-    'food/sang-trong', 'food/buffet', 'food/nha-hang', 'food/an-chay', 'food/quan-an', 'food/quan-nhau', 'food/food-court', 
-    'food/an-vat-via-he', 'food/tiem-banh', 'food/bar-pub', 'food/beer-club', 'food/cafe', 
-    'travel/Khu-du-lich', 'travel/cong-vien-vui-choi', 'travel/bao-tang-di-tich', 
-    'entertain/karaoke', 'entertain/billiards', 'entertain/giai-tri', 'entertain/san-khau', 'entertain/khu-choi-game', 'shop/trung-tam-thuong-mai'
-];
-
-export const getMainCategory: { [key: string]: string } = {
-    'food/sang-trong': 'feast',
-    'food/buffet': 'feast',
-    'food/nha-hang': 'feast',
-    'food/an-chay': 'feast',
-    'food/quan-an': 'feast',
-    'food/quan-nhau': 'feast',
-    'food/food-court': 'feast',
-    'food/an-vat-via-he': 'snack',
-    'food/tiem-banh': 'snack',
-    'food/bar-pub': 'drink',
-    'food/beer-club': 'drink',
-    'food/cafe': 'drink',
-    'travel/Khu-du-lich': 'outdoor',
-    'travel/cong-vien-vui-choi': 'outdoor',
-    'travel/bao-tang-di-tich': 'outdoor',
-    'entertain/karaoke': 'indoor',
-    'entertain/billiards': 'indoor',
-    'entertain/giai-tri': 'indoor',
-    'entertain/san-khau': 'indoor',
-    'entertain/khu-choi-game': 'indoor',
-    'shop/trung-tam-thuong-mai': 'indoor',
-    'nha-sach-thu-vien': 'indoor'
-};
-
 export class HumanEffectEvaluation {
     satiation: number;
     thirsty: number;
@@ -63,17 +34,92 @@ export class HumanEffectEvaluation {
     }
 }
 
-export const categoryEvaluate: { [key: string]: HumanEffectEvaluation } = {
-    "feast": new HumanEffectEvaluation(0.8, 0, -0.5),
-    "snack": new HumanEffectEvaluation(0.6, 0, -0.3),
-    "drink": new HumanEffectEvaluation(0, 0.8, 0),
-    "outdoor": new HumanEffectEvaluation(-0.5, -0.2, 0.7),
-    "indoor": new HumanEffectEvaluation(-0.5, -0.2, 0.5)
-};
+async function fetchCategories(): Promise<string[]> {
+    try {
+        const category = await findData(CategoryModel, { type: 'mainCategory' });
+        if (!category || category.length === 0) {
+            console.log("Category not found fetchCategories");
+            return [];
+        }
+        const categoryNames: string[] = [];
+        category.forEach((element: any) => {
+            categoryNames.push(...element.value);
+        });
+        return categoryNames;
+    }
+    catch (err) {
+        console.error("Error initializing recommendation system:", err);
+        return [];
+    }
+}
 
-export const timePeriods = {
-    "morning": ['food/bar-pub', 'food/beer-club', 'food/quan-nhau', 'entertain/karaoke'],
-    "afternoon": ['travel/Khu-du-lich', 'food/bar-pub', 'food/beer-club', 'food/quan-nhau'],
-    "night": ['travel/Khu-du-lich', 'travel/cong-vien-vui-choi', 'travel/bao-tang-di-tich', 'nha-sach-thu-vien'],
-    "lateNight": ['travel/Khu-du-lich', 'travel/cong-vien-vui-choi', 'travel/bao-tang-di-tich', 'nha-sach-thu-vien']
-};
+const placeCategory = await fetchCategories();
+export { placeCategory };
+
+async function getMainCategoryFunction(): Promise<{ [key: string]: string }> {
+    try {
+        const category = await findData(CategoryModel, { type: 'mainCategory' });
+        if (!category || category.length === 0) {
+            console.log("Category not found getMainCategory");
+            return {};
+        }
+        const categoryNames: { [key: string]: string } = {};
+        category.forEach((element: any) => {
+            element.value.forEach((value: string) => {
+                categoryNames[value] = element.name;
+            });
+        });
+        return categoryNames;
+    }
+    catch (err) {
+        console.error("Error initializing recommendation system:", err);
+        return {};
+    }
+}
+
+async function categoryEvaluateFunction(): Promise<{ [key: string]: HumanEffectEvaluation }>{
+    try {
+        await connectDB();
+        const category = await findData(CategoryModel, { type: 'mainCategory' });
+        if (!category || category.length === 0) {
+            console.log("Category not found categoryEvaluate");
+            return {};
+        }
+        return category.reduce((acc: any, c: any) => {
+            acc[c.name] = new HumanEffectEvaluation(c.point.satiation, c.point.thirsty, c.point.tiredness);
+            return acc;
+        }, {});
+    }
+    catch (err) {
+        console.error("Error initializing recommendation system:", err);
+        return {};
+    }
+}
+
+const getMainCategory = await getMainCategoryFunction();
+const categoryEvaluate = await categoryEvaluateFunction();
+
+export { getMainCategory, categoryEvaluate };
+
+async function timePeriodsFunction(): Promise<{ [key: string]: string }> {
+    try {
+        await connectDB();
+        const category = await findData(CategoryModel, { type: 'timeLimit' });
+        if (!category || category.length === 0) {
+            console.log("Time periods not found");
+            return {};
+        }
+        const timePeriods: { [key: string]: string } = {};
+        category.forEach((element: any) => {
+            timePeriods[element.name] = element.value;
+        });
+        return timePeriods;
+    }
+    catch (err) {
+        console.error("Error initializing recommendation system:", err);
+        return {};
+    }
+}
+
+const timePeriods = await timePeriodsFunction();
+export { timePeriods };

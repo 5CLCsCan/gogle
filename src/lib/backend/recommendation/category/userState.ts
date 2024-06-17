@@ -56,4 +56,10 @@ export class UserState {
         this.maxTiredness = maxTiredness;
         this.maxThirsty = maxThirsty;
     }
+
+    setUserState(userState: UserState) {
+        this.satiation = userState.satiation;
+        this.tiredness = userState.tiredness;
+        this.thirsty = userState.thirsty;
+    }
 }

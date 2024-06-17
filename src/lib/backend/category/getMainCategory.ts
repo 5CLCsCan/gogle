@@ -5,7 +5,7 @@ export default async function getMainCategory(): Promise<string[]> {
     await connectDB();
     const category = await findData(CategoryModel, { type: 'mainCategory' });
     if (!category) return [];
-
+    
     const categoryNames: string[] = [];
     category.forEach((element: any) => {
         categoryNames.push(element.name);

@@ -20,14 +20,14 @@ export async function GET(req: NextRequest) {
     try {
         const url = new URL(req.url);
         const search_params = new URLSearchParams(url.searchParams);
-
-        const userState = await parseUserState(search_params)
-        const chosenPlace = await parseChosenPlaces(search_params);
-        const filter = await parseUserFilter(search_params);
-
-        recommendationSystem.setUserState(userState);
-        recommendationSystem.setChosenPlace(chosenPlace);
-        recommendationSystem.setFilter(filter);
+        var tripID = search_params.get('tripID');
+        if (tripID === null) {
+            return new Response(JSON.stringify({ error: 'Missing tripID' }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+        recommendationSystem.initRecommendationSystem(tripID);
 
         const top5Recommendations = recommendationSystem.getTop5Recommendation();
         return new Response(JSON.stringify(top5Recommendations), {
