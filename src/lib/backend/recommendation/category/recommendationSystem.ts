@@ -62,7 +62,7 @@ export class RecommendationSystem {
         }
     }
 
-    async getTop5Recommendation(tripID: string) {
+    async getRecommendations(tripID: string) {
         await this.initRecommendationSystem(tripID);
         this.rankingSystem.resetScore();
         this.userState.resetState(this.chosenPlace ? this.chosenPlace : []);

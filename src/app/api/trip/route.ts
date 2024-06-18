@@ -1,9 +1,102 @@
 import { NextRequest } from "next/server";
 import createTrip, { CreateTripData } from "@/lib/backend/updateData/createTrip";
 import removeTrip, { RemoveTripData } from "@/lib/backend/updateData/removeTrip";
+import getTrips from "@/lib/backend/updateData/getTrips";
 
 const database = require('@/lib/database');
 
+/**
+ * @swagger
+ * /api/trip:
+ *   get:
+ *     summary: Get all trips of a user
+ *     description: Retrieve all trips for a given user ID.
+ *     parameters:
+ *       - in: query
+ *         name: userID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the user for whom to retrieve trips.
+ *     responses:
+ *       200:
+ *         description: A JSON array of trips for the user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     description: The ID of the trip.
+ *                   userID:
+ *                     type: string
+ *                     description: The ID of the user.
+ *                   userFilter:
+ *                     type: object
+ *                     description: The filter criteria used for the trip.
+ *                     properties:
+ *                       startTime:
+ *                         type: number
+ *                         description: The start time of the trip.
+ *                       startDate:
+ *                         type: string
+ *                         format: date
+ *                         description: The start date of the trip.
+ *                       tripLength:
+ *                         type: number
+ *                         description: The length of the trip in days.
+ *                       numberOfPeople:
+ *                         type: number
+ *                         description: The number of people for the trip.
+ *                       budget:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                         description: The budget preferences for the trip.
+ *                       favouriteCategories:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                         description: The favorite categories for the trip.
+ *       400:
+ *         description: Missing or invalid userID parameter.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: boolean
+ *                   example: false
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: boolean
+ *                   example: false
+ */
+export async function GET(req: NextRequest) {
+    try {
+        const url = new URL(req.url);
+        const search_params = new URLSearchParams(url.searchParams);
+        const userID = search_params.get('userID');
+        if (!userID) {
+            return new Response(JSON.stringify({ status: false }));
+        }
+        const trips = await getTrips(userID);
+        return new Response(JSON.stringify(trips));
+    } catch (error) {
+        console.error("Error in GET /api/trip:", error);
+        return new Response(JSON.stringify([]));
+    }
+}
 /**
  * @swagger
  * /api/trip:
