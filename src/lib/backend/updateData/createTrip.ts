@@ -1,7 +1,7 @@
 import TripModel from '@/models/TripSchema';
-import { connectDB, addData } from '@/lib/database';
+import { createData } from '@/lib/database';
 import { UserFilter } from '@/lib/backend/recommendation/category/userFilter';
-import { start } from 'repl';
+import { ITrip } from '@/models/TripSchema';
 
 export interface CreateTripData {
     userID: string;
@@ -13,8 +13,13 @@ export interface CreateTripData {
     favouriteCategories: string[];
 }
 
-
-export default async function createTrip(data: CreateTripData): Promise<boolean> {
+/**
+ * Create a new trip in the database.
+ * 
+ * @param {CreateTripData} data - The data for creating a new trip.
+ * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating success or failure.
+ */
+export default async function createTrip(data: CreateTripData): Promise<ITrip | boolean> {
     const { userID, startDate, startTime, tripLength, numberOfPeople, budget, favouriteCategories } = data;
     const userFilter = new UserFilter(startTime, new Date(startDate), tripLength, numberOfPeople, budget, favouriteCategories);
     const newTrip = new TripModel({
@@ -22,7 +27,6 @@ export default async function createTrip(data: CreateTripData): Promise<boolean>
         userFilter: userFilter,
     });
 
-    console.log("new trip created:" + newTrip);
-    const status = await addData(newTrip);
-    return status;
+    const newData:ITrip | Boolean = await createData(newTrip);
+    return newData ? newTrip : false;
 }

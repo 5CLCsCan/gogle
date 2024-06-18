@@ -6,6 +6,12 @@ export interface RemoveDestinationData {
   placeID: string;
 }
 
+/**
+ * Removes a destination from a trip.
+ * 
+ * @param {RemoveDestinationData} data - The placeID of a trip ID and TripID itself.
+ * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating success or failure.
+ */
 export default async function removeDestination(data: RemoveDestinationData): Promise<boolean> {
   try {
     await connectDB();

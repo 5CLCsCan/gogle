@@ -1,7 +1,7 @@
 import Places, { IPlace } from '@/models/PlaceSchema';
 import { findData } from '@/lib/database';
 
-
+// from list of placesID, get the list of category of each place ID
 export default async function getCategory(placesID: string[]): Promise<string[]> {
     try {
         const categoryList: string[] = [];

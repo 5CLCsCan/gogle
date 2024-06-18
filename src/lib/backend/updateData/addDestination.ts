@@ -6,6 +6,12 @@ export interface AddDestinationData {
   placeID: string;
 }
 
+/**
+ * Adds a destination to a trip.
+ * 
+ * @param {AddDestinationData} data - The data containing the trip ID and place ID.
+ * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating success or failure.
+ */
 export default async function addDestination(data: AddDestinationData): Promise<boolean> {
   try {
     await connectDB();

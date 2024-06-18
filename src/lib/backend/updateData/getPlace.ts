@@ -5,6 +5,12 @@ export interface GetPlaceData {
   placeID: string;
 }
 
+/**
+ * Fetches details of a place by its ID.
+ * 
+ * @param {GetPlaceData} data - The placeID.
+ * @returns {Promise<IPlace | false>} - A promise that resolves to the place details or FALSE if not found.
+ */
 export default async function getPlace(data: GetPlaceData): Promise<IPlace | false> {
   try {
     await connectDB();
