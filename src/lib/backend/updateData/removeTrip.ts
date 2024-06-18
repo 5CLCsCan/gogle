@@ -5,6 +5,12 @@ export interface RemoveTripData {
     tripID: string;
 }
 
+/**
+ * Remove a trip from the database.
+ * 
+ * @param {RemoveTripData} data - The trip's ID to be removed.
+ * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating success or failure.
+ */
 export default async function removeTrip(data: RemoveTripData): Promise<boolean> {
     await connectDB();
     const { tripID } = data;

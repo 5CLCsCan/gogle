@@ -57,6 +57,17 @@ async function addData<T extends Document>(data: T): Promise<boolean> {
   }
 }
 
+async function createData<T extends Document>(data: T): Promise<T | false> {
+  await connectDB();
+  try {
+    const savedData = await data.save();
+    return savedData;
+  } catch (err) {
+    console.error("Error saving data:", err);
+    return false;
+  }
+}
+
 async function findData<T extends Document>(
   model: Model<T>,
   query: any
@@ -101,4 +112,4 @@ async function deleteData<T extends Document>(model: Model<T>, query: any): Prom
   }
 }
 
-export { connectDB, addData, findData, findAndUpdateData, deleteData };
+export { connectDB, addData, createData, findData, findAndUpdateData, deleteData };

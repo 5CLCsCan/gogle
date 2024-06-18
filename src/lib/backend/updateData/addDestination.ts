@@ -6,6 +6,12 @@ export interface AddDestinationData {
   placeID: string;
 }
 
+/**
+ * Adds a destination to a trip.
+ * 
+ * @param {AddDestinationData} data - The data containing the trip ID and place ID.
+ * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating success or failure.
+ */
 export default async function addDestination(data: AddDestinationData): Promise<boolean> {
   try {
     await connectDB();
@@ -17,19 +23,18 @@ export default async function addDestination(data: AddDestinationData): Promise<
       console.log("Trip not found");
       return false;
     }
-
+    
     const trip = trips[0];
-    if (!trip.locations) {
-      trip.locations = [];
+    if (!trip.locationsID) {
+      trip.locationsID = [];
     }
-    const updatedLocations = [...trip.locations, placeID];
-
-    const update = { $set: { locations: updatedLocations } };
+    const updatedLocations = [...trip.locationsID, placeID];
+    const update = { $set: { locationsID: updatedLocations } };
     const updatedTrip: ITrip | null = await findAndUpdateData(TripModel, { _id: tripID }, update);
 
     if (updatedTrip) {
       console.log("Destination added successfully");
-      return true;
+      return true; 
     } else {
       console.log("Failed to add destination");
       return false;

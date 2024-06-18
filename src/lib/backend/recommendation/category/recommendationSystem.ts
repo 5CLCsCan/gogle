@@ -1,17 +1,20 @@
 import { UserState } from '@/lib/backend/recommendation/category/userState';
 import { UserFilter } from '@/lib/backend/recommendation/category/userFilter';
 import { RankingSystem } from '@/lib/backend/recommendation/category/rankingSystem';
+import { findData } from '@/lib/database';
+import TripModel, { ITrip } from '@/models/TripSchema';
+import getCategory from '../../updateData/getCategoryList';
 
 export class RecommendationSystem {
-    userState: UserState | null;
-    chosenPlace: string[] | null;
-    filter: UserFilter | null;
+    userState: UserState;
+    chosenPlace: string[];
+    filter: UserFilter;
     rankingSystem: RankingSystem;
 
-    constructor(userState: UserState = new UserState(), chosenPlace: string[] = [], filter: UserFilter = new UserFilter()) {
-        this.userState = userState;
-        this.chosenPlace = chosenPlace;
-        this.filter = filter;
+    constructor() {
+        this.userState = new UserState();
+        this.chosenPlace = [];
+        this.filter = new UserFilter();
         this.rankingSystem = new RankingSystem();
     }
 
@@ -34,18 +37,37 @@ export class RecommendationSystem {
     }
 
     setUserState(userState: UserState) {
-        this.userState = userState;
+        this.userState.setState(userState.satiation, userState.tiredness, userState.thirsty);
     }
 
     setChosenPlace(chosenPlace: string[]) {
         this.chosenPlace = chosenPlace;
     }
 
-    getTop5Recommendation() {
+    async initRecommendationSystem(tripID: string) {
+        try {
+            const trips: ITrip[] | null = await findData(TripModel, { _id: tripID });
+            if (!trips || trips.length === 0) {
+                console.log("Trip not found");
+                return;
+            }
+            const trip = trips[0];
+            const chosenPlaceCategory = await getCategory(trip.locationsID);
+            if (trip.userState) this.setUserState(trip.userState);
+            if (chosenPlaceCategory) this.setChosenPlace(chosenPlaceCategory);
+            if (trip.userFilter) this.setFilter(trip.userFilter);
+        }
+        catch (err) {
+            console.error("Error initializing recommendation system:", err);
+        }
+    }
+
+    async getRecommendations(tripID: string) {
+        await this.initRecommendationSystem(tripID);
         this.rankingSystem.resetScore();
-        this.userState?.resetState(this.chosenPlace);
+        this.userState.resetState(this.chosenPlace ? this.chosenPlace : []);
         this.recommend();
-        return this.rankingSystem.categoryPoints.slice(0, 5);
+        return this.rankingSystem.categoryPoints;
     }
 }
 

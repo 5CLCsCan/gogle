@@ -19,7 +19,6 @@ export class RankingSystem {
     }
 
     rankingUserState(userState: UserState) {
-        console.log(`${userState.satiation} ${userState.thirsty} ${userState.tiredness}`);
         for (let i = 0; i < this.categoryPoints.length; i++) {
             const temp = this.categoryPoints[i].category;
             const mainCategory = getMainCategory[temp];
@@ -64,7 +63,7 @@ export class RankingSystem {
 
     rankingTime(time: number) {
         const currentTimePeriod = Ultils.getCurrentTimePeriod(time);
-        console.log(`current time: ${currentTimePeriod} - ${time}`);
+        console.log(`start time: ${currentTimePeriod} - ${time}`);
         for (let i = 0; i < timePeriods[currentTimePeriod].length; i++) {
             let index = -1;
             for (let j = 0; j < this.categoryPoints.length; j++) {
@@ -89,10 +88,16 @@ export class RankingSystem {
     }
 
     rankingCategories(favouriteCategories: string[]) {
+        var favouritePlaceCategory: string[] = [];
+        for (const [key, value] of Object.entries(getMainCategory)) {
+            if (favouriteCategories.includes(value)) {
+                favouritePlaceCategory.push(key);
+            }
+        }
         for (let i = 0; i < this.categoryPoints.length; i++) {
             let isIncluded = false;
-            for (let j = 0; j < favouriteCategories.length; j++) {
-                if (favouriteCategories[j] === this.categoryPoints[i].category) {
+            for (let j = 0; j < favouritePlaceCategory.length; j++) {
+                if (favouritePlaceCategory[j] === this.categoryPoints[i].category) {
                     isIncluded = true;
                     break;
                 }
