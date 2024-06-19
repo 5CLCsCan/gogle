@@ -6,7 +6,7 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
 
 /**
  * @swagger
- * /api/place/[placeID]:
+ * /api/places/[placeID]:
  *   get:
  *     summary: Get place details
  *     description: Retrieve the details of a specific place by its ID.

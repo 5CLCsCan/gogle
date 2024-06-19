@@ -6,7 +6,7 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
 
 /**
 *   @swagger
-*   /api/getplaces:
+*   /api/places:
 *     get:
 *       description: Retrieve a list of places for a given trip ID
 *       parameters:
@@ -65,7 +65,7 @@ export async function GET(req: NextRequest) {
 
 /**
  * @swagger
- * /api/place:
+ * /api/places:
  *   post:
  *     summary: Add a destination to a trip
  *     description: Add a new destination to a trip by providing the trip ID and place ID.
@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
 
 /**
  * @swagger
- * /api/place:
+ * /api/places:
  *   delete:
  *     summary: Remove a destination from a trip
  *     description: Remove an existing destination from a trip by providing the trip ID and place ID.
