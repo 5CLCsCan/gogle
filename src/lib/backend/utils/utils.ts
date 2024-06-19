@@ -42,3 +42,23 @@ export function shuffleArray<T>(array: T[]): T[] {
     }
     return shuffled;
 }
+
+export function convertTime2Num(time: string): number {
+    const [hour, minute] = time.split(':').map(Number);
+    return hour + minute / 60;
+}
+
+export function getDay(): number {
+    let date = new Date();
+    return date.getDay();
+}
+
+export function getTimeNumber(): number {
+    let date = new Date();
+    return date.getHours() + date.getMinutes() / 60;
+}
+
+export function extractPlaceID(url: string): string {
+    const parts = url.split('/');
+    return parts[parts.length - 1];
+}

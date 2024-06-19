@@ -25,15 +25,15 @@ export class RankingSystem {
             const point: HumanEffectEvaluation = categoryEvaluate[mainCategory];
             if (userState.satiation + point.satiation > userState.maxSatiation) {
                 this.categoryPoints[i].point -= 10;
-                console.log(`${this.categoryPoints[i].category} -> ${this.categoryPoints[i].point} : satiation is too high`);
+                // console.log(`${this.categoryPoints[i].category} -> ${this.categoryPoints[i].point} : satiation is too high`);
             }
             if (userState.tiredness + point.tiredness > userState.maxTiredness) {
                 this.categoryPoints[i].point -= 10;
-                console.log(`${this.categoryPoints[i].category} -> ${this.categoryPoints[i].point} : tiredness is too high`);
+                // console.log(`${this.categoryPoints[i].category} -> ${this.categoryPoints[i].point} : tiredness is too high`);
             }
             if (userState.thirsty + point.thirsty > userState.maxThirsty) {
                 this.categoryPoints[i].point -= 10;
-                console.log(`${this.categoryPoints[i].category} -> ${this.categoryPoints[i].point} : thirsty is too high`);
+                // console.log(`${this.categoryPoints[i].category} -> ${this.categoryPoints[i].point} : thirsty is too high`);
             }
         }
     }
@@ -56,14 +56,14 @@ export class RankingSystem {
             }
             if (index !== -1) {
                 this.categoryPoints[index].point -= 20;
-                console.log(`${this.categoryPoints[index].category} -> ${this.categoryPoints[index].point} : chosen place`);
+                // console.log(`${this.categoryPoints[index].category} -> ${this.categoryPoints[index].point} : chosen place`);
             }
         }
     }
 
     rankingTime(time: number) {
         const currentTimePeriod = Ultils.getCurrentTimePeriod(time);
-        console.log(`start time: ${currentTimePeriod} - ${time}`);
+        // console.log(`start time: ${currentTimePeriod} - ${time}`);
         for (let i = 0; i < timePeriods[currentTimePeriod].length; i++) {
             let index = -1;
             for (let j = 0; j < this.categoryPoints.length; j++) {
@@ -74,7 +74,7 @@ export class RankingSystem {
             }
             if (index !== -1) {
                 this.categoryPoints[index].point -= 10;
-                console.log(`${this.categoryPoints[index].category} -> ${this.categoryPoints[index].point} : time period`);
+                // console.log(`${this.categoryPoints[index].category} -> ${this.categoryPoints[index].point} : time period`);
             }
         }
     }
@@ -104,7 +104,7 @@ export class RankingSystem {
             }
             if (isIncluded) {
                 this.categoryPoints[i].point += 5;
-                console.log(`${this.categoryPoints[i].category} -> ${this.categoryPoints[i].point} : favourite categories`);
+                // console.log(`${this.categoryPoints[i].category} -> ${this.categoryPoints[i].point} : favourite categories`);
             }
         }
     }

@@ -24,7 +24,7 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
 *                 items:
 *                   type: object
 *                   properties:
-*                     placeID:
+*                     _id:
 *                       type: string
 *                     name:
 *                       type: string
@@ -37,9 +37,9 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
 *                     imgLink:
 *                       type: string
 *                     openingTime:
-*                       type: string
-*                     closingTime:
-*                       type: string
+*                       type: array
+*                       items:
+*                           type: string
 *                     price_range:
 *                       type: array
 *                       items:
