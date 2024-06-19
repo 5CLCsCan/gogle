@@ -50,8 +50,13 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
 
 
 export async function GET(req: NextRequest) {
-    const data = req.headers.get("decoded");
-    let places = await getPlaces({ lat: 10.773856, long: 106.704809, radius: 4, category_list: ['food/sang-trong', 'travel/bao-tang-di-tich']})
+    const url = new URL(req.url);
+    const search_params = new URLSearchParams(url.searchParams);
+    const tripID = search_params.get('tripID');
+    if (!tripID) {
+        return new Response(JSON.stringify({ error: "Missing tripID" }), { status: 400 });
+    }
+    const places = await getPlaces(tripID);
     return new Response(JSON.stringify(places), jsonHeader);
 }
 

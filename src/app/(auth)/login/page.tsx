@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Poppins } from 'next/font/google'
@@ -18,7 +18,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
-import useAuthRedirect from '@/hooks/useAuthRedirect'
+import { withPublic } from '@/utils/withPublic'
+import ButtonLoading from '@/components/ButtonLoading'
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '600'] })
 
@@ -29,8 +30,9 @@ const loginSchema = z.object({
   }),
 })
 
-export default function LoginPage() {
+function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const loginForm = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -39,11 +41,39 @@ export default function LoginPage() {
     },
   })
 
-  const onSubmit = (values: z.infer<typeof loginSchema>) => {
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    setIsLoading(true)
+    const respone = await fetch('/api/auth/signin', {
+      method: 'POST',
+      body: JSON.stringify(values),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    setIsLoading(false)
+
+    if (!respone.ok) {
+      const data = await respone.json()
+      console.log(data)
+
+      loginForm.setError('root.generic', {
+        type: 'manual',
+        message: data.error,
+      })
+    } else {
+      const data = await respone.json()
+      localStorage.setItem('accessToken', data.token)
+      window.location.href = '/'
+    }
   }
 
-  return !useAuthRedirect() ? (
+  useEffect(() => {
+    if (window.localStorage.getItem('accessToken')) {
+      window.location.href = '/'
+    }
+  }, [])
+
+  return (
     <main
       className={cn(
         'min-h-full flex-1 flex flex-col gap-8 items-center justify-center',
@@ -114,10 +144,17 @@ export default function LoginPage() {
               </FormItem>
             )}
           ></FormField>
+          {loginForm.formState.errors.root?.generic && (
+            <FormMessage className='text-red-500'>
+              {loginForm.formState.errors.root.generic.message}
+            </FormMessage>
+          )}
           <div className='flex flex-col gap-2'>
-            <Button className='rounded-full text-lg py-6 font-normal'>
-              Login
-            </Button>
+            <ButtonLoading
+              isLoading={isLoading}
+              text='Login'
+              onClick={loginForm.handleSubmit(onSubmit)}
+            />
             <Link
               className='text-center text-gray-500 text-sm hover:text-primary'
               href={'/register'}
@@ -140,5 +177,7 @@ export default function LoginPage() {
         </Button>
       </section>
     </main>
-  ) : null
+  )
 }
+
+export default withPublic(LoginPage)

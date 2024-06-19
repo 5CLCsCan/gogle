@@ -1,5 +1,5 @@
 import TripModel from '@/models/TripSchema';
-import { createData } from '@/lib/database';
+import { createData } from '@/lib/backend/database';
 import { UserFilter } from '@/lib/backend/recommendation/category/userFilter';
 import { ITrip } from '@/models/TripSchema';
 

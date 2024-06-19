@@ -1,7 +1,7 @@
 import { UserState } from '@/lib/backend/recommendation/category/userState';
 import { UserFilter } from '@/lib/backend/recommendation/category/userFilter';
 import { RankingSystem } from '@/lib/backend/recommendation/category/rankingSystem';
-import { findData } from '@/lib/database';
+import { findData } from '@/lib/backend/database';
 import TripModel, { ITrip } from '@/models/TripSchema';
 import getCategory from '../../updateData/getCategoryList';
 

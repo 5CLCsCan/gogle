@@ -7,6 +7,8 @@ export interface ITrip extends Document {
   locationsID: string[];
   userState: UserState;
   userFilter: UserFilter;
+  last_latitude: number;
+  last_longitude: number;
 }
 
 const TripSchema: Schema<ITrip> = new Schema({
@@ -28,6 +30,14 @@ const TripSchema: Schema<ITrip> = new Schema({
     type: Schema.Types.Mixed,
     required: false,
   },
+  last_latitude: {
+    type: Number,
+    required: true,
+  },
+  last_longitude: {
+    type: Number,
+    required: true,
+  }
 });
 
 const TripModel: Model<ITrip> = mongoose.models.Trip || mongoose.model<ITrip>('Trip', TripSchema);

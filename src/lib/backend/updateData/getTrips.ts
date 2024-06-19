@@ -1,5 +1,5 @@
 import TripModel, { ITrip } from '@/models/TripSchema';
-import { connectDB, findData } from '@/lib/database';
+import { connectDB, findData } from '@/lib/backend/database';
 
 /**
  * Fetches details of a trip by its user ID.
@@ -9,8 +9,6 @@ import { connectDB, findData } from '@/lib/database';
  */
 export default async function getTrips(userID: string): Promise<ITrip[] | false> {
   try {
-    await connectDB();
-
     const trips: ITrip[] | null = await findData(TripModel, { userID: userID });
     return trips ? trips : [];
   } catch (err) {

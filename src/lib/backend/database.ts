@@ -100,6 +100,7 @@ async function findAndUpdateData<T extends Document>(
 }
 
 async function deleteData<T extends Document>(model: Model<T>, query: any): Promise<boolean> {
+  await connectDB();
   try {
     await model
       .deleteOne(query)

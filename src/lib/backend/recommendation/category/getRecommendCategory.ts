@@ -1,11 +1,13 @@
 import recommendationSystem from '@/lib/backend/recommendation/category/recommendationSystem';
 
-export default async function getRecommendCategory(tripID: string) {
+export async function getRecommendCategory(tripID: string): Promise<string[]> {
     const recommendations = await recommendationSystem.getRecommendations(tripID);
-
     if (!recommendations) {
         return [];
     }
-
-    return recommendations;
+    let recommendedCategories: string[] = [];
+    recommendations.forEach((recommendation) => {
+        recommendedCategories.push(recommendation.category);
+    });
+    return recommendedCategories;
 }

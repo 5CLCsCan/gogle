@@ -1,4 +1,4 @@
-import { connectDB, findData } from "@/lib/database";
+import { connectDB, findData } from "@/lib/backend/database";
 import { CategoryModel } from "@/models/CategorySchema";
 
 export class Ultils {
