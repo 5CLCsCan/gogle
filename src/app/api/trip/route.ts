@@ -3,8 +3,6 @@ import createTrip, { CreateTripData } from "@/lib/backend/updateData/createTrip"
 import removeTrip, { RemoveTripData } from "@/lib/backend/updateData/removeTrip";
 import getTrips from "@/lib/backend/updateData/getTrips";
 
-const database = require('@/lib/database');
-
 /**
  * @swagger
  * /api/trip:
