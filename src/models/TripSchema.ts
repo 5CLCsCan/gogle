@@ -7,6 +7,8 @@ export interface ITrip extends Document {
   locationsID: string[];
   userState: UserState;
   userFilter: UserFilter;
+  last_latitude: number;
+  last_longitude: number;
 }
 
 const TripSchema: Schema<ITrip> = new Schema({
@@ -27,6 +29,16 @@ const TripSchema: Schema<ITrip> = new Schema({
   userFilter: {
     type: Schema.Types.Mixed,
     required: false,
+  },
+  last_latitude: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
+  last_longitude: {
+    type: Number,
+    required: false,
+    default: 0,
   },
 });
 

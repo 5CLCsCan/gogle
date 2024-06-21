@@ -44,14 +44,19 @@ export class RecommendationSystem {
         this.chosenPlace = chosenPlace;
     }
 
-    async initRecommendationSystem(tripID: string) {
+    async initRecommendationSystem(tripID: string | ITrip) {
         try {
-            const trips: ITrip[] | null = await findData(TripModel, { _id: tripID });
-            if (!trips || trips.length === 0) {
-                console.log("Trip not found");
-                return;
+            var trip: ITrip;
+            if (typeof tripID === "object") {
+                trip = tripID;
+            } else {
+                const trips: ITrip[] | null = await findData(TripModel, { _id: tripID });
+                if (!trips || trips.length === 0) {
+                    console.log("Trip not found");
+                    return;
+                }
+                trip = trips[0];
             }
-            const trip = trips[0];
             const chosenPlaceCategory = await getCategory(trip.locationsID);
             if (trip.userState) this.setUserState(trip.userState);
             if (chosenPlaceCategory) this.setChosenPlace(chosenPlaceCategory);
@@ -62,7 +67,7 @@ export class RecommendationSystem {
         }
     }
 
-    async getRecommendations(tripID: string) {
+    async getRecommendations(tripID: string | ITrip) {
         await this.initRecommendationSystem(tripID);
         this.rankingSystem.resetScore();
         this.userState.resetState(this.chosenPlace ? this.chosenPlace : []);
