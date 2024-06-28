@@ -1,8 +1,8 @@
-import TripModel from '@/models/TripSchema';
-import { connectDB, deleteData } from '@/lib/database';
+import TripModel from '@/models/TripSchema'
+import { connectDB, deleteData } from '@/lib/backend/database'
 
 export interface RemoveTripData {
-    tripID: string;
+  tripID: string
 }
 
 /**

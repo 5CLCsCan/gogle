@@ -1,5 +1,5 @@
-import { CategoryModel } from '@/models/CategorySchema';
-import { connectDB, findData } from '@/lib/database';
+import { CategoryModel } from '@/models/CategorySchema'
+import { connectDB, findData } from '@/lib/backend/database'
 
 /**
  * Fetches main categories from the database.
