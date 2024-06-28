@@ -22,26 +22,32 @@ export class UserState {
         return arr.indexOf(Math.min(...arr));
     }
 
-    resetState(chosenPlace: string[] | null) {
-        if (chosenPlace === null || chosenPlace.length === 0) {
+    resetState(chosenPlace: string[]) {
+        if (chosenPlace.length === 0) {
             this.satiation = 0;
             this.tiredness = 0;
             this.thirsty = 0;
         } else {
-            for (let i = 0; i < chosenPlace.length; i++) {
-                const mainCategory = getMainCategory[chosenPlace[i]];
-                const point: HumanEffectEvaluation = categoryEvaluate[mainCategory];
-                if (point === undefined) {
-                    console.log(`Error at ${chosenPlace[i]}: is not in categoryEvaluate`);
-                    return;
+            try {
+                const chosenCategory = chosenPlace;
+                for (let i = 0; i < chosenCategory.length; i++) {
+                    const mainCategory = getMainCategory[chosenCategory[i]];
+                    const point: HumanEffectEvaluation = categoryEvaluate[mainCategory];
+                    if (point === undefined) {
+                        console.log(`Error at ${chosenCategory[i]}: is not in categoryEvaluate`);
+                        return;
+                    }
+                    this.satiation += point.satiation;
+                    this.tiredness += point.tiredness;
+                    this.thirsty += point.thirsty;
                 }
-                this.satiation += point.satiation;
-                this.tiredness += point.tiredness;
-                this.thirsty += point.thirsty;
+                this.satiation = Math.min(this.maxSatiation, Math.max(0, this.satiation));
+                this.tiredness = Math.min(this.maxTiredness, Math.max(0, this.tiredness));
+                this.thirsty = Math.min(this.maxThirsty, Math.max(0, this.thirsty));
+            } 
+            catch (err) {
+                console.error("Error resetState:", err);
             }
-            this.satiation = Math.min(this.maxSatiation, Math.max(0, this.satiation));
-            this.tiredness = Math.min(this.maxTiredness, Math.max(0, this.tiredness));
-            this.thirsty = Math.min(this.maxThirsty, Math.max(0, this.thirsty));
         }
     }
 
@@ -55,5 +61,11 @@ export class UserState {
         this.maxSatiation = maxSatiation;
         this.maxTiredness = maxTiredness;
         this.maxThirsty = maxThirsty;
+    }
+
+    setUserState(userState: UserState) {
+        this.satiation = userState.satiation;
+        this.tiredness = userState.tiredness;
+        this.thirsty = userState.thirsty;
     }
 }

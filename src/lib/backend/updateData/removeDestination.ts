@@ -6,9 +6,13 @@ export interface RemoveDestinationData {
   placeID: string
 }
 
-export default async function removeDestination(
-  data: RemoveDestinationData,
-): Promise<boolean> {
+/**
+ * Removes a destination from a trip.
+ * 
+ * @param {RemoveDestinationData} data - The placeID of a trip ID and TripID itself.
+ * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating success or failure.
+ */
+export default async function removeDestination(data: RemoveDestinationData): Promise<boolean> {
   try {
     await connectDB()
 
@@ -20,20 +24,14 @@ export default async function removeDestination(
       return false
     }
 
-    const trip = trips[0]
-    if (!trip.locations) {
-      trip.locations = []
+    const trip = trips[0];
+    if (!trip.locationsID) {
+      trip.locationsID = [];
     }
-    const updatedLocations = trip.locations.filter(
-      location => location !== placeID,
-    )
+    const updatedLocations = trip.locationsID.filter((location) => location !== placeID);
 
-    const update = { $set: { locations: updatedLocations } }
-    const updatedTrip: ITrip | null = await findAndUpdateData(
-      TripModel,
-      { _id: tripID },
-      update,
-    )
+    const update = { $set: { locationsID: updatedLocations } };
+    const updatedTrip: ITrip | null = await findAndUpdateData(TripModel, { _id: tripID }, update);
 
     if (updatedTrip) {
       console.log('Destination removed successfully')
