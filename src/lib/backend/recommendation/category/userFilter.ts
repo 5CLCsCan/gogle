@@ -3,7 +3,7 @@ export class UserFilter {
     date: Date | null;
     maxDistance: number | null;
     numberOfPeople: number | null;
-    budget: string[] | null;
+    budget: string | null;
     favouriteCategories: string[] | null;
 
     constructor(
@@ -11,7 +11,7 @@ export class UserFilter {
         date: Date | null = null,
         maxDistance: number | null = null,
         numberOfPeople: number | null = null,
-        budget: string[] | null = null,
+        budget: string | null = null,
         favouriteCategories: string[] | null = null
     ) {
         this.startTime = startTime;
@@ -49,7 +49,7 @@ export class UserFilter {
         this.favouriteCategories = favouriteCategories;
     }
 
-    setBudget(budget: string[]) {
+    setBudget(budget: string) {
         this.budget = budget;
     }
 }
