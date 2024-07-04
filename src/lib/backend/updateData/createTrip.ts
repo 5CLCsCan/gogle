@@ -9,7 +9,7 @@ export interface CreateTripData {
     startTime: number;
     tripLength: number;
     numberOfPeople: number;
-    budget: string[];
+    budget: string;
     favouriteCategories: string[];
 }
 
