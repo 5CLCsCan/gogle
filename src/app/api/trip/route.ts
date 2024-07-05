@@ -127,15 +127,19 @@ export async function GET(req: NextRequest) {
  *                 type: number
  *                 description: The number of people going on the trip.
  *               budget:
- *                 type: array
- *                 items:
- *                   type: string
+ *                 type: string
  *                 description: The budget for the trip.
  *               favouriteCategories:
  *                 type: array
  *                 items:
  *                   type: string
  *                 description: The favorite categories for the trip.
+ *               longitude:
+ *                 type: number
+ *                 description: The longitude of the starting place. 
+ *               latitude:
+ *                 type: number
+ *                 description: The latitude of the starting place.
  *     responses:
  *       200:
  *         description: A JSON object indicating the success status.
