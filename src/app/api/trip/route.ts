@@ -159,7 +159,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     try {
         const parseData = await req.json();
-        console.log(parseData)
+        // console.log(parseData)
         const data : CreateTripData = {
             userID: parseData.userID,
             startDate: parseData.startDate,
@@ -167,7 +167,9 @@ export async function POST(req: NextRequest) {
             tripLength: parseData.tripLength,
             numberOfPeople: parseData.numberOfPeople,
             budget: parseData.budget,
-            favouriteCategories: parseData.favouriteCategories
+            favouriteCategories: parseData.favouriteCategories,
+            latitude: parseData.latitude,
+            longitude: parseData.longitude
         };
         const respone = await createTrip(data);
         return new Response(JSON.stringify({ status: respone }));
