@@ -1,9 +1,9 @@
-import { NextRequest } from "next/server";
-import createTrip, { CreateTripData } from "@/lib/backend/updateData/createTrip";
-import removeTrip, { RemoveTripData } from "@/lib/backend/updateData/removeTrip";
-import getTrips from "@/lib/backend/updateData/getTrips";
+import { NextRequest } from 'next/server'
+import createTrip, { CreateTripData } from '@/lib/backend/updateData/createTrip'
+import removeTrip, { RemoveTripData } from '@/lib/backend/updateData/removeTrip'
+import getTrips from '@/lib/backend/updateData/getTrips'
 
-const database = require('@/lib/database');
+const database = require('@/lib/backend/database')
 
 /**
  * @swagger
@@ -83,19 +83,19 @@ const database = require('@/lib/database');
  *                   example: false
  */
 export async function GET(req: NextRequest) {
-    try {
-        const url = new URL(req.url);
-        const search_params = new URLSearchParams(url.searchParams);
-        const userID = search_params.get('userID');
-        if (!userID) {
-            return new Response(JSON.stringify({ status: false }));
-        }
-        const trips = await getTrips(userID);
-        return new Response(JSON.stringify(trips));
-    } catch (error) {
-        console.error("Error in GET /api/trip:", error);
-        return new Response(JSON.stringify([]));
+  try {
+    const url = new URL(req.url)
+    const search_params = new URLSearchParams(url.searchParams)
+    const userID = search_params.get('userID')
+    if (!userID) {
+      return new Response(JSON.stringify({ status: false }))
     }
+    const trips = await getTrips(userID)
+    return new Response(JSON.stringify(trips))
+  } catch (error) {
+    console.error('Error in GET /api/trip:', error)
+    return new Response(JSON.stringify([]))
+  }
 }
 /**
  * @swagger
@@ -136,7 +136,7 @@ export async function GET(req: NextRequest) {
  *                 description: The favorite categories for the trip.
  *               longitude:
  *                 type: number
- *                 description: The longitude of the starting place. 
+ *                 description: The longitude of the starting place.
  *               latitude:
  *                 type: number
  *                 description: The latitude of the starting place.
@@ -161,26 +161,26 @@ export async function GET(req: NextRequest) {
  *                   type: boolean
  */
 export async function POST(req: NextRequest) {
-    try {
-        const parseData = await req.json();
-        // console.log(parseData)
-        const data : CreateTripData = {
-            userID: parseData.userID,
-            startDate: parseData.startDate,
-            startTime: parseData.startTime,
-            tripLength: parseData.tripLength,
-            numberOfPeople: parseData.numberOfPeople,
-            budget: parseData.budget,
-            favouriteCategories: parseData.favouriteCategories,
-            latitude: parseData.latitude,
-            longitude: parseData.longitude
-        };
-        const respone = await createTrip(data);
-        return new Response(JSON.stringify({ status: respone }));
-    } catch (error) {
-        console.error("Error in POST /api/createTrip:", error);
-        return new Response(JSON.stringify({ status: false }));
+  try {
+    const parseData = await req.json()
+    // console.log(parseData)
+    const data: CreateTripData = {
+      userID: parseData.userID,
+      startDate: parseData.startDate,
+      startTime: parseData.startTime,
+      tripLength: parseData.tripLength,
+      numberOfPeople: parseData.numberOfPeople,
+      budget: parseData.budget,
+      favouriteCategories: parseData.favouriteCategories,
+      latitude: parseData.latitude,
+      longitude: parseData.longitude,
     }
+    const respone = await createTrip(data)
+    return new Response(JSON.stringify({ status: respone }))
+  } catch (error) {
+    console.error('Error in POST /api/createTrip:', error)
+    return new Response(JSON.stringify({ status: false }))
+  }
 }
 
 /**
@@ -220,15 +220,15 @@ export async function POST(req: NextRequest) {
  *                   type: boolean
  */
 export async function DELETE(req: NextRequest) {
-    try {
-        const parseData = await req.json();
-        const data: RemoveTripData = {
-            tripID: parseData.tripID
-        };
-        const status = await removeTrip(data);
-        return new Response(JSON.stringify({ status: status }));
-    } catch (error) {
-        console.error("Error in POST /api/removeTrip:", error);
-        return new Response(JSON.stringify({ status: false }));
+  try {
+    const parseData = await req.json()
+    const data: RemoveTripData = {
+      tripID: parseData.tripID,
     }
+    const status = await removeTrip(data)
+    return new Response(JSON.stringify({ status: status }))
+  } catch (error) {
+    console.error('Error in POST /api/removeTrip:', error)
+    return new Response(JSON.stringify({ status: false }))
+  }
 }

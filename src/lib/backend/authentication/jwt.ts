@@ -4,7 +4,7 @@ import { JWTInvalid } from 'jose/errors'
 
 const secretKey = process.env.JWT_SECRET!
 const key = new TextEncoder().encode(secretKey)
-const expiredTime = '24h'
+const expireDuration = '24h'
 
 interface Payload extends JWTPayload {
   email: string
@@ -21,7 +21,7 @@ async function encrypt(payload: Payload): Promise<string> {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime(expiredTime)
+    .setExpirationTime(expireDuration)
     .sign(key)
 }
 
