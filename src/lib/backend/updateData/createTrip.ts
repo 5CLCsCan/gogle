@@ -9,8 +9,10 @@ export interface CreateTripData {
   startTime: number
   tripLength: number
   numberOfPeople: number
-  budget: string[]
+  budget: string
   favouriteCategories: string[]
+  latitude: number
+  longitude: number
 }
 
 /**
@@ -30,7 +32,10 @@ export default async function createTrip(
     numberOfPeople,
     budget,
     favouriteCategories,
+    latitude,
+    longitude,
   } = data
+  console.log(data)
   const userFilter = new UserFilter(
     startTime,
     new Date(startDate),
@@ -38,12 +43,15 @@ export default async function createTrip(
     numberOfPeople,
     budget,
     favouriteCategories,
+    latitude,
+    longitude,
   )
   const newTrip = new TripModel({
     userID: userID,
     userFilter: userFilter,
   })
-
+  if (userFilter.latitude) newTrip.last_latitude = userFilter.latitude
+  if (userFilter.longitude) newTrip.last_longitude = userFilter.longitude
   const newData: ITrip | Boolean = await createData(newTrip)
   return newData ? newTrip : false
 }
