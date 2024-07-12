@@ -9,8 +9,10 @@ export interface CreateTripData {
     startTime: number;
     tripLength: number;
     numberOfPeople: number;
-    budget: string[];
+    budget: string;
     favouriteCategories: string[];
+    latitude: number;
+    longitude: number;
 }
 
 /**
@@ -20,13 +22,15 @@ export interface CreateTripData {
  * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating success or failure.
  */
 export default async function createTrip(data: CreateTripData): Promise<ITrip | boolean> {
-    const { userID, startDate, startTime, tripLength, numberOfPeople, budget, favouriteCategories } = data;
-    const userFilter = new UserFilter(startTime, new Date(startDate), tripLength, numberOfPeople, budget, favouriteCategories);
+    const { userID, startDate, startTime, tripLength, numberOfPeople, budget, favouriteCategories, latitude, longitude } = data;
+    console.log(data)
+    const userFilter = new UserFilter(startTime, new Date(startDate), tripLength, numberOfPeople, budget, favouriteCategories, latitude, longitude);
     const newTrip = new TripModel({
         userID: userID,
         userFilter: userFilter,
     });
-
+    if (userFilter.latitude) newTrip.last_latitude = userFilter.latitude;
+    if (userFilter.longitude) newTrip.last_longitude = userFilter.longitude;
     const newData:ITrip | Boolean = await createData(newTrip);
     return newData ? newTrip : false;
 }

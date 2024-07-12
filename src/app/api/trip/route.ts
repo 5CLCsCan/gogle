@@ -127,15 +127,19 @@ export async function GET(req: NextRequest) {
  *                 type: number
  *                 description: The number of people going on the trip.
  *               budget:
- *                 type: array
- *                 items:
- *                   type: string
+ *                 type: string
  *                 description: The budget for the trip.
  *               favouriteCategories:
  *                 type: array
  *                 items:
  *                   type: string
  *                 description: The favorite categories for the trip.
+ *               longitude:
+ *                 type: number
+ *                 description: The longitude of the starting place. 
+ *               latitude:
+ *                 type: number
+ *                 description: The latitude of the starting place.
  *     responses:
  *       200:
  *         description: A JSON object indicating the success status.
@@ -159,7 +163,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     try {
         const parseData = await req.json();
-        console.log(parseData)
+        // console.log(parseData)
         const data : CreateTripData = {
             userID: parseData.userID,
             startDate: parseData.startDate,
@@ -167,7 +171,9 @@ export async function POST(req: NextRequest) {
             tripLength: parseData.tripLength,
             numberOfPeople: parseData.numberOfPeople,
             budget: parseData.budget,
-            favouriteCategories: parseData.favouriteCategories
+            favouriteCategories: parseData.favouriteCategories,
+            latitude: parseData.latitude,
+            longitude: parseData.longitude
         };
         const respone = await createTrip(data);
         return new Response(JSON.stringify({ status: respone }));
