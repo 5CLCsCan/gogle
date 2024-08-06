@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import createTrip, { CreateTripData } from '@/lib/backend/updateData/createTrip'
 import removeTrip, { RemoveTripData } from '@/lib/backend/updateData/removeTrip'
 import getTrips from '@/lib/backend/updateData/getTrips'
+import fetchUserIDByToken from '@/lib/backend/updateData/getUserID'
 
 const database = require('@/lib/backend/database')
 
@@ -12,12 +13,7 @@ const database = require('@/lib/backend/database')
  *     summary: Get all trips of a user
  *     description: Retrieve all trips for a given user ID.
  *     parameters:
- *       - in: query
- *         name: userID
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the user for whom to retrieve trips.
+ * 
  *     responses:
  *       200:
  *         description: A JSON array of trips for the user.
@@ -82,11 +78,15 @@ const database = require('@/lib/backend/database')
  *                   type: boolean
  *                   example: false
  */
+
 export async function GET(req: NextRequest) {
   try {
-    const url = new URL(req.url)
-    const search_params = new URLSearchParams(url.searchParams)
-    const userID = search_params.get('userID')
+    console.log(req.headers)
+    const token = req.headers.get('decoded')
+    if (!token) {
+      return new Response(JSON.stringify({ status: false }))
+    }
+    const userID = await fetchUserIDByToken(token)
     if (!userID) {
       return new Response(JSON.stringify({ status: false }))
     }
@@ -97,12 +97,15 @@ export async function GET(req: NextRequest) {
     return new Response(JSON.stringify([]))
   }
 }
+
 /**
  * @swagger
  * /api/trip:
  *   post:
  *     summary: Create a new trip
  *     description: Create a new trip with the provided trip details.
+ *     parameters:
+
  *     requestBody:
  *       required: true
  *       content:
@@ -110,9 +113,6 @@ export async function GET(req: NextRequest) {
  *           schema:
  *             type: object
  *             properties:
- *               userID:
- *                 type: string
- *                 description: The ID of the user creating the trip.
  *               startDate:
  *                 type: string
  *                 format: date
@@ -252,9 +252,16 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const parseData = await req.json()
-    // console.log(parseData)
+    const token = req.headers.get('decoded')
+    if (!token) {
+      return new Response(JSON.stringify({ status: false }))
+    }
+    const userID = await fetchUserIDByToken(token)
+    if (!userID) {
+      return new Response(JSON.stringify({ status: false }))
+    }
     const data: CreateTripData = {
-      userID: parseData.userID,
+      userID: userID,
       startDate: parseData.startDate,
       startTime: parseData.startTime,
       tripLength: parseData.tripLength,
