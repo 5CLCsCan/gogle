@@ -82,3 +82,4 @@ export class RecommendationSystem {
 const recommendationSystem = new RecommendationSystem()
 
 export { recommendationSystem }
+export default recommendationSystem

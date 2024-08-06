@@ -20,6 +20,17 @@ jobs:
       - name: Linting
         run: cd src && npm run lint
 
+      - name: Create env file
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          directory: src
+          file_name: .env.local
+
+      - name: Build
+        run: cd src && npm run build
+
       - name: Deploy to Vercel
         run: vercel --prod src/
         env:

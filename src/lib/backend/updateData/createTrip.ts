@@ -58,4 +58,3 @@ export default async function createTrip(
     return false
   }
   return tripData
-}
