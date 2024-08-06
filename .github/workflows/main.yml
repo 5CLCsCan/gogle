@@ -39,6 +39,9 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          NEXT_PUBLIC_MONGO_URI: ${{ secrets.MONGO_URI }}
+          NEXT_PUBLIC_JWT_SECRET: ${{ secrets.JWT_SECRET }}
         working-directory: ./src
 
       - name: Deploy to Vercel
