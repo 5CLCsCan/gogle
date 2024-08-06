@@ -12,24 +12,16 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
         working-directory: ./src
-
-      - name: Verify Secrets
-        run: |
-          echo "MONGO_URI=${{ secrets.MONGO_URI }}"
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}"
-          echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
-          echo "VERCEL_ORG_ID=${{ secrets.VERCEL_ORG_ID }}"
-          echo "VERCEL_PROJECT_ID=${{ secrets.VERCEL_PROJECT_ID }}"
       
       - name: Create .env.local
         run: |
