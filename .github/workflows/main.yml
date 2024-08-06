@@ -24,6 +24,10 @@ jobs:
         run: |
           echo MONGO_URI=${{ secrets.MONGO_URI }} >> ./src/.env.local
           echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./src/.env.local
+      
+      - name: Display .env.local
+        run: cat .env.local
+        working-directory: ./src
 
       - name: Build
         run: npm run build
