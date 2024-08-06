@@ -23,8 +23,8 @@ jobs:
       - name: Create env file
         uses: SpicyPizza/create-envfile@v2.0
         with:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          envkey_MONGO_URI: ${{ secrets.MONGO_URI }}
+          envkey_JWT_SECRET: ${{ secrets.JWT_SECRET }}
           directory: src
           file_name: .env.local
 
