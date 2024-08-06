@@ -5,51 +5,80 @@ import { getPlaces } from "@/lib/backend/recommendation/places/getPlaces";
 import { jsonHeader } from "@/lib/backend/header/jsonheader";
 
 /**
-*   @swagger
-*   /api/places:
-*     get:
-*       description: Retrieve a list of places for a given trip ID
-*       parameters:
-*         - name: tripID
-*           in: query
-*           required: true
-*           description: The tripID of the trip
-*           schema:
-*             type: string
-*       responses:
-*         200:
-*           description: Successfully retrieved the list of places
-*           content:
-*             application/json:
-*               schema:
-*                 type: array
-*                 items:
-*                   type: object
-*                   properties:
-*                     _id:
-*                       type: string
-*                     name:
-*                       type: string
-*                     address:
-*                       type: string
-*                     latitude:
-*                       type: number
-*                     longitude:
-*                       type: number
-*                     imgLink:
-*                       type: string
-*                     openingTime:
-*                       type: array
-*                       items:
-*                           type: string
-*                     price_range:
-*                       type: array
-*                       items:
-*                         type: number
-*                       example: [50000, 100000]
-*/
-
-
+ * @swagger
+ * /api/places:
+ *   get:
+ *     summary: Retrieve a list of places for a given trip ID
+ *     description: Retrieve a list of places associated with the specified trip ID.
+ *     parameters:
+ *       - name: tripID
+ *         in: query
+ *         required: true
+ *         description: The unique identifier of the trip.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of places.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     description: The unique identifier for the place.
+ *                   name:
+ *                     type: string
+ *                     description: The name of the place.
+ *                   address:
+ *                     type: string
+ *                     description: The address of the place.
+ *                   latitude:
+ *                     type: number
+ *                     description: The latitude coordinate of the place.
+ *                   longitude:
+ *                     type: number
+ *                     description: The longitude coordinate of the place.
+ *                   imgLink:
+ *                     type: string
+ *                     description: A URL link to an image of the place.
+ *                   openingTime:
+ *                     type: array
+ *                     description: An array of strings representing opening times.
+ *                     items:
+ *                       type: string
+ *                       description: Opening time of the place in a string format (e.g., "09:00 AM - 10:00 PM").
+ *                   price_range:
+ *                     type: array
+ *                     description: The price range for the place.
+ *                     items:
+ *                       type: number
+ *                     example: [50000, 100000]
+ *       400:
+ *         description: Bad Request. The request is missing the required tripID query parameter.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message indicating what went wrong.
+ *                   example: Missing tripID
+ *       500:
+ *         description: Internal Server Error. An unexpected error occurred while processing the request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: A message detailing the server error.
+ */
 
 export async function GET(req: NextRequest) {
     const url = new URL(req.url);
