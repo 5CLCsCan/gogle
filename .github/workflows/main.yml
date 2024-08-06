@@ -28,6 +28,9 @@ jobs:
           directory: src
           file_name: .env.local
 
+      - name: List file
+        run: ls -la src
+
       - name: Build
         run: cd src && npm run build
 
