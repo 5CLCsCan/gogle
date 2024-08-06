@@ -22,26 +22,9 @@ jobs:
       - name: Install dependencies
         run: npm install
         working-directory: ./src
-      
-      - name: Create .env.local
-        run: |
-          echo MONGO_URI=${{ secrets.MONGO_URI }} >> .env.local
-          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env.local
-        working-directory: ./src
-
-      - name: Display .env.local
-        run: cat .env.local
-        working-directory: ./src
 
       - name: Linting
         run: npm run lint
-        working-directory: ./src
-
-      - name: Build
-        run: npm run build
-        env:
-          NEXT_PUBLIC_MONGO_URI: ${{ secrets.MONGO_URI }}
-          NEXT_PUBLIC_JWT_SECRET: ${{ secrets.JWT_SECRET }}
         working-directory: ./src
 
       - name: Deploy to Vercel
