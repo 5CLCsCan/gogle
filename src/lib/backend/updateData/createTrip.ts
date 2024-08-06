@@ -52,6 +52,6 @@ export default async function createTrip(
   })
   if (userFilter.latitude) newTrip.last_latitude = userFilter.latitude
   if (userFilter.longitude) newTrip.last_longitude = userFilter.longitude
-  const newData: ITrip | Boolean = await createData(newTrip)
-  return newData ? newTrip : false
+  const newData: ITrip | boolean = await createData(newTrip)
+  return newData ? newData : false
 }
