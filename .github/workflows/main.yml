@@ -26,10 +26,8 @@ jobs:
           echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./src/.env.local
 
       - name: Build
-        run: cd src && npm run build
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: npm run build
+        working-directory: src
 
       - name: Deploy to Vercel
         run: vercel --prod src/
