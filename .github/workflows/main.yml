@@ -20,6 +20,9 @@ jobs:
       - name: Linting
         run: cd src && npm run lint
 
+      - name: Build
+        run: cd src && npm run build
+
       - name: Deploy to Vercel
         run: vercel --prod src/
         env:
