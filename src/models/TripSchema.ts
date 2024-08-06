@@ -32,12 +32,14 @@ const TripSchema: Schema<ITrip> = new Schema({
   },
   last_latitude: {
     type: Number,
-    required: true,
+    required: false,
+    default: 0,
   },
   last_longitude: {
     type: Number,
-    required: true,
-  }
+    required: false,
+    default: 0,
+  },
 });
 
 const TripModel: Model<ITrip> = mongoose.models.Trip || mongoose.model<ITrip>('Trip', TripSchema);

@@ -46,6 +46,17 @@ async function connectDB(): Promise<typeof mongoose> {
   }
 }
 
+async function createData<T extends Document>(data: T): Promise<T | false> {
+  await connectDB()
+  try {
+    const savedData = await data.save()
+    return savedData
+  } catch (err) {
+    console.error('Error saving data:', err)
+    return false
+  }
+}
+
 async function addData<T extends Document>(data: T): Promise<boolean> {
   await connectDB()
   try {
@@ -54,17 +65,6 @@ async function addData<T extends Document>(data: T): Promise<boolean> {
   } catch (err) {
     console.error('Error saving data:', err)
     return false
-  }
-}
-
-async function createData<T extends Document>(data: T): Promise<T | false> {
-  await connectDB();
-  try {
-    const savedData = await data.save();
-    return savedData;
-  } catch (err) {
-    console.error("Error saving data:", err);
-    return false;
   }
 }
 
@@ -121,4 +121,11 @@ async function deleteData<T extends Document>(
   }
 }
 
-export { connectDB, addData, findData, findAndUpdateData, createData, deleteData }
+export {
+  connectDB,
+  addData,
+  createData,
+  findData,
+  findAndUpdateData,
+  deleteData,
+}

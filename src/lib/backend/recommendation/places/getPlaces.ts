@@ -2,7 +2,7 @@ import * as utils from '@/lib/backend/utils/utils';
 import * as database from '@/lib/backend/database';
 import Places, { IPlace } from '@/models/PlaceSchema';
 import TripModel, { ITrip } from '@/models/TripSchema';
-import { getRecommendCategory } from "@/lib/backend/recommendation/category/getRecommendCategory";
+import getRecommendCategory from "@/lib/backend/recommendation/category/getRecommendCategory";
 
 
 const LimitPlace = 10;

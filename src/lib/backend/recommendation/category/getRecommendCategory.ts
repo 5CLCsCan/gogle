@@ -1,12 +1,13 @@
-import recommendationSystem from '@/lib/backend/recommendation/category/recommendationSystem';
+import { recommendationSystem } from '@/lib/backend/recommendation/category/recommendationSystem';
+import { ITrip } from '@/models/TripSchema';
 
-export async function getRecommendCategory(tripID: string): Promise<string[]> {
+export default async function getRecommendCategory(tripID: string | ITrip) {
     const recommendations = await recommendationSystem.getRecommendations(tripID);
     if (!recommendations) {
         return [];
     }
     let recommendedCategories: string[] = [];
-    recommendations.forEach((recommendation) => {
+    recommendations.forEach((recommendation: { category: string; }) => {
         recommendedCategories.push(recommendation.category);
     });
     return recommendedCategories;
