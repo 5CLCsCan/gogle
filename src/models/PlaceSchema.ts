@@ -5,10 +5,12 @@ export interface IPlace extends Document {
   address: string;
   category: string;
   detailUrl?: string;
-  id: string;
+  id: number;
   imgLink: string;
   latitude: number;
   longitude: number;
+  gridX: number,
+  gridY: number,
   name: string;
   openingTime: string[][][];
   priceRange: number[];
@@ -29,7 +31,7 @@ const PlaceSchema: Schema<IPlace> = new Schema({
     required: false,
   },
   id: {
-    type: String,
+    type: Number,
     required: true,
     unique: true,
   },
@@ -42,6 +44,14 @@ const PlaceSchema: Schema<IPlace> = new Schema({
     required: true,
   },
   longitude: {
+    type: Number,
+    required: true,
+  },
+  gridX: {
+    type: Number,
+    required: true,
+  },
+  gridY: {
     type: Number,
     required: true,
   },
@@ -60,6 +70,6 @@ const PlaceSchema: Schema<IPlace> = new Schema({
 });
 
 // Define the Place model
-const Places: Model<IPlace> = mongoose.models.Places || mongoose.model<IPlace>('Places', PlaceSchema);
+const Places: Model<IPlace> = mongoose.models.places_tests || mongoose.model<IPlace>('places_tests', PlaceSchema);
 
 export default Places;

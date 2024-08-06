@@ -1,5 +1,5 @@
-import Places, { IPlace } from '@/models/PlaceSchema'
-import { connectDB, findData } from '@/lib/backend/database'
+import Places, { IPlace } from '@/models/PlaceSchema';
+import { connectDB, findData } from '@/lib/backend/database';
 
 export interface GetPlaceData {
   placeID: string
@@ -13,8 +13,6 @@ export interface GetPlaceData {
  */
 export default async function getPlace(data: GetPlaceData): Promise<IPlace | false> {
   try {
-    await connectDB()
-
     const { placeID } = data
     const places: IPlace[] | null = await findData(Places, { _id: placeID })
 
@@ -22,8 +20,9 @@ export default async function getPlace(data: GetPlaceData): Promise<IPlace | fal
       console.log('Place not found')
       return false
     }
-    const place = places[0]
-    return place
+    const place = places[0];
+    console.log(place);
+    return place;
   } catch (err) {
     console.error('Error getting place:', err)
     return false

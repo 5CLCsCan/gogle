@@ -1,9 +1,9 @@
-import bcrypt from 'bcryptjs'
-import { connectDB, addData, findData } from '@/lib/backend/database'
-import UserModel from '@/models/UserSchema'
-import { encrypt, decrypt } from './jwt'
-import { Payload } from './jwt'
-import { cookies } from 'next/headers'
+import bcrypt from "bcryptjs";
+import { connectDB, addData, findData } from "@/lib/backend/database";
+import UserModel from "@/models/UserSchema";
+import { encrypt, decrypt } from "./jwt";
+import { Payload } from "./jwt";
+import { cookies } from "next/headers";
 
 const expiredDuration = 24 * 60 * 60 * 1000
 

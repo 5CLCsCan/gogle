@@ -1,60 +1,71 @@
 import { NextRequest } from "next/server";
 import addDestination, { AddDestinationData } from '@/lib/backend/updateData/addDestination';
-import getPlace, { GetPlaceData } from '@/lib/backend/updateData/getPlace';
 import removeDestination, { RemoveDestinationData } from '@/lib/backend/updateData/removeDestination';
+import { getPlaces } from "@/lib/backend/recommendation/places/getPlaces";
+import { jsonHeader } from "@/lib/backend/header/jsonheader";
 
 /**
- * @swagger
- * /api/place:
- *   get:
- *     summary: Get place details
- *     description: Retrieve the details of a specific place by its ID.
- *     parameters:
- *       - in: query
- *         name: placeID
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the place to retrieve.
- *     responses:
- *       200:
- *         description: A JSON object containing the place details.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 placeID:
- *                   type: string
- *                 name:
- *                   type: string
- *                 description:
- *                   type: string
- *       500:
- *         description: Internal server error.
- */
-export async function GET(req: NextRequest) {
-    try {
-        const url = new URL(req.url);
-        const search_params = new URLSearchParams(url.searchParams);
-        const placeID = search_params.get('placeID');
-        console.log("PLACE ID : " + placeID);
-        if (!placeID) {
-            return new Response(JSON.stringify({ status: false }));
-        }
-        const data: GetPlaceData = { placeID: placeID };
+*   @swagger
+*   /api/places:
+*     get:
+*       description: Retrieve a list of places for a given trip ID
+*       parameters:
+*         - name: tripID
+*           in: query
+*           required: true
+*           description: The tripID of the trip
+*           schema:
+*             type: string
+*       responses:
+*         200:
+*           description: Successfully retrieved the list of places
+*           content:
+*             application/json:
+*               schema:
+*                 type: array
+*                 items:
+*                   type: object
+*                   properties:
+*                     _id:
+*                       type: string
+*                     name:
+*                       type: string
+*                     address:
+*                       type: string
+*                     latitude:
+*                       type: number
+*                     longitude:
+*                       type: number
+*                     imgLink:
+*                       type: string
+*                     openingTime:
+*                       type: array
+*                       items:
+*                           type: string
+*                     price_range:
+*                       type: array
+*                       items:
+*                         type: number
+*                       example: [50000, 100000]
+*/
 
-        const fetchedData = await getPlace(data);
-        return new Response(JSON.stringify(fetchedData));
-    } catch (error) {
-        console.error("Error in GET /api/getPlace:", error);
-        return new Response(JSON.stringify({ status: false }));
+
+
+export async function GET(req: NextRequest) {
+    const url = new URL(req.url);
+    const search_params = new URLSearchParams(url.searchParams);
+    const tripID = search_params.get('tripID');
+    if (!tripID) {
+        return new Response(JSON.stringify({ error: "Missing tripID" }), { status: 400 });
     }
+    const places = await getPlaces(tripID);
+    return new Response(JSON.stringify(places), jsonHeader);
 }
 
+
 /**
  * @swagger
- * /api/place:
+ * /api/places:
  *   post:
  *     summary: Add a destination to a trip
  *     description: Add a new destination to a trip by providing the trip ID and place ID.
@@ -102,7 +113,7 @@ export async function POST(req: NextRequest) {
 
 /**
  * @swagger
- * /api/place:
+ * /api/places:
  *   delete:
  *     summary: Remove a destination from a trip
  *     description: Remove an existing destination from a trip by providing the trip ID and place ID.
