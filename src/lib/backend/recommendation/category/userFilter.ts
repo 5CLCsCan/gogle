@@ -3,16 +3,20 @@ export class UserFilter {
     date: Date | null;
     maxDistance: number | null;
     numberOfPeople: number | null;
-    budget: string[] | null;
+    budget: string | null;
     favouriteCategories: string[] | null;
+    latitude: number | null = null;
+    longitude: number | null = null;
 
     constructor(
         startTime: number | null = null,
         date: Date | null = null,
         maxDistance: number | null = null,
         numberOfPeople: number | null = null,
-        budget: string[] | null = null,
-        favouriteCategories: string[] | null = null
+        budget: string | null = null,
+        favouriteCategories: string[] | null = null,
+        latitude: number | null = null,
+        longitude: number | null = null
     ) {
         this.startTime = startTime;
         this.date = date;
@@ -20,6 +24,8 @@ export class UserFilter {
         this.numberOfPeople = numberOfPeople;
         this.budget = budget;
         this.favouriteCategories = favouriteCategories;
+        this.latitude = latitude;
+        this.longitude = longitude;
         if (startTime == null) {
             const currentDate: Date = new Date();
             this.startTime = currentDate.getHours();
@@ -49,7 +55,7 @@ export class UserFilter {
         this.favouriteCategories = favouriteCategories;
     }
 
-    setBudget(budget: string[]) {
+    setBudget(budget: string) {
         this.budget = budget;
     }
 }
