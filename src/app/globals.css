@@ -79,6 +79,6 @@
     }
     
     input {
-      @apply text-foreground border border-black px-5 py-3 rounded-lg focus:outline-none;
+      /* @apply text-foreground border border-black px-5 py-3 rounded-lg focus:outline-none; */
     }
   }
