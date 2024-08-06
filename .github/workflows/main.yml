@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - "pages/*" # This triggers the workflow on any branch that starts with "feature/"
+      - "pages/*"
 
 jobs:
   build:
@@ -14,28 +14,45 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
       - name: Install dependencies
-        run: cd src && npm install
+        run: npm install
+        working-directory: ./src
 
-      - name: Linting
-        run: cd src && npm run lint
-
+      - name: Verify Secrets
+        run: |
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}"
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}"
+          echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
+          echo "VERCEL_ORG_ID=${{ secrets.VERCEL_ORG_ID }}"
+          echo "VERCEL_PROJECT_ID=${{ secrets.VERCEL_PROJECT_ID }}"
+      
       - name: Create .env.local
         run: |
-          echo MONGO_URI=${{ secrets.MONGO_URI }} >> ./src/.env.local
-          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./src/.env.local
-      
+          echo MONGO_URI=${{ secrets.MONGO_URI }} >> .env.local
+          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env.local
+        working-directory: ./src
+
       - name: Display .env.local
         run: cat .env.local
         working-directory: ./src
 
+      - name: Linting
+        run: npm run lint
+        working-directory: ./src
+
       - name: Build
         run: npm run build
-        working-directory: src
+        working-directory: ./src
 
       - name: Deploy to Vercel
-        run: vercel --prod src/
+        run: vercel --prod
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: ./src
