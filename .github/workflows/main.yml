@@ -20,6 +20,11 @@ jobs:
       - name: Linting
         run: cd src && npm run lint
 
+      - name: Create .env.local
+        run: |
+          echo MONGO_URI=${{ secrets.MONGO_URI }} >> ./src/.env.local
+          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> ./src/.env.local
+
       - name: Build
         run: cd src && npm run build
         env:
