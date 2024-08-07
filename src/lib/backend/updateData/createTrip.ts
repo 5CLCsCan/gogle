@@ -5,6 +5,7 @@ import { ITrip } from '@/models/TripSchema'
 
 export interface CreateTripData {
   userID: string
+  tripName: string
   startDate: string
   startTime: number
   tripLength: number
@@ -26,6 +27,7 @@ export default async function createTrip(
 ): Promise<ITrip | boolean> {
   const {
     userID,
+    tripName,
     startDate,
     startTime,
     tripLength,

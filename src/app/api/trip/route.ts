@@ -30,6 +30,9 @@ const database = require('@/lib/backend/database')
  *                   userID:
  *                     type: string
  *                     description: The ID of the user.
+ *                  tripName:
+ *                    type: string
+ *                    description: The name of the trip.
  *                   userFilter:
  *                     type: object
  *                     description: The filter criteria used for the trip.
@@ -81,7 +84,6 @@ const database = require('@/lib/backend/database')
 
 export async function GET(req: NextRequest) {
   try {
-    console.log(req.headers)
     const token = req.headers.get('decoded')
     if (!token) {
       return new Response(JSON.stringify({ status: false }))
@@ -158,6 +160,9 @@ export async function GET(req: NextRequest) {
  *                     userID:
  *                       type: string
  *                       description: The ID of the user who created the trip.
+ *                     tripName:
+ *                       type: string
+ *                       description: The name of the trip.
  *                     locationsID:
  *                       type: array
  *                       items:
@@ -262,6 +267,7 @@ export async function POST(req: NextRequest) {
     }
     const data: CreateTripData = {
       userID: userID,
+      tripName: parseData.tripName,
       startDate: parseData.startDate,
       startTime: parseData.startTime,
       tripLength: parseData.tripLength,
