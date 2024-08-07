@@ -345,9 +345,17 @@ export default function FirstStep() {
                   )}
                 />
               </div>
-              <Button className='self-end' type='submit'>
-                Next
-              </Button>
+              <div className='flex justify-between'>
+                <Button
+                  type='button'
+                  onClick={() => {
+                    router.push('/create')
+                  }}
+                >
+                  Previous
+                </Button>
+                <Button type='submit'>Next</Button>
+              </div>
             </form>
           </Form>
         </div>

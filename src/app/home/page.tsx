@@ -1,10 +1,12 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/toaster'
 import { useToast } from '@/components/ui/use-toast'
 import { Trip } from '@/types'
 import { fetchData } from '@/utils/fetchData'
 import { withProtected } from '@/utils/withProtected'
+import { Trash2Icon } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -33,6 +35,29 @@ function HomePage() {
     fetchTrips()
   }, [])
 
+  const deleteTrip = async (trip: Trip) => {
+    try {
+      const response = await fetchData('DELETE', 'trip', 0, {
+        tripID: trip._id,
+      })
+      const data = await response.json()
+      if (!response.ok) {
+        toast({
+          title: 'Error when deleting trip',
+          description: data.message,
+        })
+        return
+      }
+      toast({
+        title: 'Trip deleted',
+        description: `Trip ${trip._id} has been deleted`,
+      })
+      setTrips(trips.filter(t => t._id !== trip._id))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <main className='flex flex-col px-24'>
       <h1 className='text-primary text-4xl text-center mb-10'>
@@ -50,6 +75,15 @@ function HomePage() {
                 <h4 className='text-2xl'>{trip._id}</h4>
               </Link>
               <p>{trip.userFilter.date}</p>
+              <Button
+                variant='destructive'
+                className='float-right'
+                onClick={() => {
+                  deleteTrip(trip)
+                }}
+              >
+                <Trash2Icon />
+              </Button>
             </div>
           ))}
         </div>

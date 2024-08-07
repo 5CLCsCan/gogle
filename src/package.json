@@ -29,7 +29,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
-    "framer-motion": "^11.2.10",
+    "framer-motion": "^11.3.22",
     "jose": "^5.1.0",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",

@@ -19,6 +19,7 @@ import {
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import {
+  ArrowRight,
   CalendarIcon,
   LoaderCircle,
   Martini,
@@ -38,8 +39,10 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Toggle } from '@/components/ui/toggle'
 import { fetchData } from '@/utils/fetchData'
 import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
 
 const createTripSchema = z.object({
+  name: z.string().min(1),
   startDate: z.date(),
   numberOfPeople: z.coerce.number().int().positive().min(1).max(5),
   startTime: z.string(),
@@ -62,10 +65,12 @@ const icon: Icon = {
 export default function CreateTripPage() {
   const [activities, setActivities] = useState<string[][]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [tripName, setTripName] = useState('')
   const router = useRouter()
   const createTripForm = useForm({
     resolver: zodResolver(createTripSchema),
     defaultValues: {
+      name: '',
       startDate: new Date(),
       numberOfPeople: 1,
       startTime: '09:00',
@@ -135,8 +140,59 @@ export default function CreateTripPage() {
       <Form {...createTripForm}>
         <form
           onSubmit={createTripForm.handleSubmit(onSubmit)}
-          className='grid grid-cols-2 gap-x-4 p-8 w-2/4'
+          className='relative grid grid-cols-2 gap-x-4 p-8 w-2/4'
         >
+          {tripName === '' && (
+            <div className='absolute z-[999] backdrop-blur-md w-full h-full flex items-center justify-center'>
+              <FormField
+                control={createTripForm.control}
+                name='name'
+                render={({ field }) => {
+                  return (
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        y: 100,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                      }}
+                      className='w-1/2'
+                    >
+                      <FormItem>
+                        <FormLabel>What should we call your trip?</FormLabel>
+                        <FormControl>
+                          <div className='flex gap-4'>
+                            <Input
+                              className='block'
+                              {...field}
+                              {...createTripForm.register('name', {
+                                required: true,
+                              })}
+                            />
+                            <Button
+                              type='button'
+                              onClick={() => {
+                                createTripForm.trigger('name').then(valid => {
+                                  if (valid) {
+                                    setTripName(field.value)
+                                  }
+                                })
+                              }}
+                            >
+                              <ArrowRight />
+                            </Button>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    </motion.div>
+                  )
+                }}
+              />
+            </div>
+          )}
           <div className='flex flex-col gap-4'>
             <FormField
               control={createTripForm.control}
