@@ -5,6 +5,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { Trip } from '@/types'
 import { fetchData } from '@/utils/fetchData'
 import { withProtected } from '@/utils/withProtected'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 function HomePage() {
@@ -45,7 +46,9 @@ function HomePage() {
               key={trip._id}
               className='border border-gray-400 px-4 py-8 rounded-lg shadow-md'
             >
-              <h4 className='text-2xl'>{trip._id}</h4>
+              <Link href={`/trip/${trip._id}`}>
+                <h4 className='text-2xl'>{trip._id}</h4>
+              </Link>
               <p>{trip.userFilter.date}</p>
             </div>
           ))}

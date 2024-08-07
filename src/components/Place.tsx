@@ -1,12 +1,19 @@
 import { Place as PlaceType } from '@/types'
 import { Button } from './ui/button'
-import { PlusCircleIcon } from 'lucide-react'
+import { MinusCircle, PlusCircleIcon } from 'lucide-react'
 
 interface PlaceProps extends PlaceType {
+  variant?: 'selected' | 'default'
   onClick: (id: string) => void
 }
 
-export default function Place({ name, imgLink, _id, onClick }: PlaceProps) {
+export default function Place({
+  name,
+  imgLink,
+  _id,
+  onClick,
+  variant,
+}: PlaceProps) {
   return (
     <div>
       <div className='relative hover:after:'>
@@ -18,7 +25,7 @@ export default function Place({ name, imgLink, _id, onClick }: PlaceProps) {
             }}
             variant='default'
           >
-            <PlusCircleIcon />
+            {variant === 'selected' ? <MinusCircle /> : <PlusCircleIcon />}
           </Button>
         </div>
       </div>

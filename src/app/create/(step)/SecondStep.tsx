@@ -104,12 +104,14 @@ export default function SecondStep() {
                 selectedPlaces.includes(place) ? (
                   <Place
                     key={index}
+                    variant='selected'
                     onClick={() => removePlace(place._id)}
                     {...place}
                   />
                 ) : (
                   <Place
                     key={index}
+                    variant='default'
                     onClick={() => selectPlace(place._id)}
                     {...place}
                   />

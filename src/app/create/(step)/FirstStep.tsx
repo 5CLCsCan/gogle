@@ -147,8 +147,8 @@ export default function FirstStep() {
   const onSubmit = async (
     values: z.infer<typeof createTripFirstStepSchema>,
   ) => {
-    createTripFirstStepForm.setValue('latitude', center.lat)
-    createTripFirstStepForm.setValue('longitude', center.lng)
+    values.latitude = center.lat
+    values.longitude = center.lng
     console.log(values)
     console.log(tripData)
 
