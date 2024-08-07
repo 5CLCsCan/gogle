@@ -5,6 +5,7 @@ import { ITrip } from '@/models/TripSchema'
 
 export interface CreateTripData {
   userID: string
+  tripName: string
   startDate: string
   startTime: number
   tripLength: number
@@ -26,6 +27,7 @@ export default async function createTrip(
 ): Promise<ITrip | boolean> {
   const {
     userID,
+    tripName,
     startDate,
     startTime,
     tripLength,
@@ -48,6 +50,7 @@ export default async function createTrip(
   )
   const newTrip = new TripModel({
     userID: userID,
+    tripName: tripName,
     userFilter: userFilter,
   })
   if (userFilter.latitude) newTrip.last_latitude = userFilter.latitude
