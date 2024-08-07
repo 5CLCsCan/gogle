@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
     const tripID = utils.extractID(req.url);
     const data = await getTripPlaces(tripID);
 
-    return NextResponse.json({ status: true, trips: data });
+    return NextResponse.json({ status: true, places: data });
   } catch (error) {
     console.error('Error in GET /api/trip/[tripid]/route:', error);
 
