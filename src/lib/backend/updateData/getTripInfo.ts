@@ -4,7 +4,13 @@ import { connectDB, findData } from '@/lib/backend/database';
 import { ITrip } from '@/models/TripSchema';
 import mongoose from 'mongoose';
 
-export default async function getTripPlaces(tripID: string): Promise<IPlace[] | false> {
+export interface GetTripData {
+    status: boolean;
+    trip: ITrip;
+    places: IPlace[];
+}
+
+export default async function getTripPlaces(tripID: string): Promise<GetTripData | false> {
     await connectDB();
 
     const trip: ITrip[] | null = await findData(TripModel, { _id: tripID });
@@ -16,5 +22,10 @@ export default async function getTripPlaces(tripID: string): Promise<IPlace[] | 
         const place: IPlace[] | null = await findData(Places, { _id: objectId });
         if (place) tripPlaces.push(place[0]);
     }
-    return tripPlaces;
+    const data = {
+        status: true,
+        trip: trip[0],
+        places: tripPlaces,
+    };
+    return data;
 }
