@@ -138,10 +138,7 @@ export default function CreateTripPage() {
         Explore your adventure
       </h1>
       <Form {...createTripForm}>
-        <form
-          onSubmit={createTripForm.handleSubmit(onSubmit)}
-          className='relative grid grid-cols-2 gap-x-4 p-8 w-2/4'
-        >
+        <div className='relative w-2/4 h-[300px]'>
           {tripName === '' && (
             <div className='absolute z-[999] backdrop-blur-md w-full h-full flex items-center justify-center'>
               <FormField
@@ -193,167 +190,212 @@ export default function CreateTripPage() {
               />
             </div>
           )}
-          <div className='flex flex-col gap-4'>
-            <FormField
-              control={createTripForm.control}
-              name='startDate'
-              render={({ field }) => (
-                <FormItem className='flex flex-col w-full'>
-                  <FormLabel>Select date & time</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={'outline'}
-                          className={cn(
-                            'pl-3 text-left font-normal',
-                            !field.value && 'text-muted-foreground',
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, 'PPP')
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className='w-auto p-0' align='start'>
-                      <Calendar
-                        mode='single'
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={date => date < new Date()}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormItem>
-              )}
-            />
-            <div className='flex gap-3'>
-              <FormField
-                control={createTripForm.control}
-                name='startTime'
-                render={({ field }) => {
-                  return (
-                    <FormItem className='flex-1'>
-                      <FormLabel>From</FormLabel>
-                      <FormControl>
-                        <Input className='w-full' type='time' {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )
-                }}
-              />
-              <FormField
-                control={createTripForm.control}
-                name='numberOfPeople'
-                render={({ field }) => {
-                  return (
-                    <FormItem className='flex-1'>
-                      <FormLabel>Total people</FormLabel>
-                      <FormControl>
-                        <Input
-                          className='block'
-                          type='number'
-                          min='1'
-                          max='5'
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )
-                }}
-              />
-            </div>
-            <FormField
-              control={createTripForm.control}
-              name='budget'
-              render={({ field }) => (
-                <FormItem className='space-y-3'>
-                  <FormLabel>My budget: {field.value}</FormLabel>
-                  <FormControl>
-                    <Slider
-                      onValueChange={values => {
-                        const value = values[0]
-                        if (value === 33) {
-                          field.onChange('Economy')
-                        } else if (value === 66) {
-                          field.onChange('Standard')
-                        } else {
-                          field.onChange('Luxury')
-                        }
-                      }}
-                      defaultValue={[33]}
-                      max={99}
-                      step={33}
-                      min={33}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className='px-4'>
-            <h3 className='text-center text-lg mb-2'>
-              Select your favourites activities
-            </h3>
-            {isLoading ? (
-              <div className='flex justify-center'>
-                <LoaderCircle className='animate-spin h-10 w-10' />
-              </div>
-            ) : (
-              <FormField
-                control={createTripForm.control}
-                name='favouriteCategories'
-                render={() => (
-                  <FormItem>
-                    <div className='flex items-center flex-col gap-3'>
-                      {activities.map((_, i) => {
+          {tripName !== '' && (
+            <form
+              onSubmit={createTripForm.handleSubmit(onSubmit)}
+              className='relative grid grid-cols-2 gap-x-4 p-8 w-full'
+            >
+              <>
+                <motion.div
+                  className='flex flex-col gap-4'
+                  initial={{
+                    opacity: 0,
+                    x: -100,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                  }}
+                >
+                  <FormField
+                    control={createTripForm.control}
+                    name='startDate'
+                    render={({ field }) => (
+                      <FormItem className='flex flex-col w-full'>
+                        <FormLabel>Select date & time</FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={'outline'}
+                                className={cn(
+                                  'pl-3 text-left font-normal',
+                                  !field.value && 'text-muted-foreground',
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, 'PPP')
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className='w-auto p-0' align='start'>
+                            <Calendar
+                              mode='single'
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              disabled={date => date < new Date()}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormItem>
+                    )}
+                  />
+                  <div className='flex gap-3'>
+                    <FormField
+                      control={createTripForm.control}
+                      name='startTime'
+                      render={({ field }) => {
                         return (
-                          <div className='flex gap-4' key={i}>
-                            {activities[i].map((activity, index) => (
-                              <div key={i * ITEM_PER_ROW + index}>
-                                <div key={i * ITEM_PER_ROW + index}>
-                                  <Toggle
-                                    className='flex gap-2 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground'
-                                    key={i * ITEM_PER_ROW + index}
-                                    variant='outline'
-                                    onClick={() => {
-                                      updateSelectedActivities({
-                                        target: {
-                                          value: activity,
-                                        },
-                                      })
-                                    }}
-                                  >
-                                    <div className='flex gap-2 items-center'>
-                                      {icon[activity]}
-                                      {activity}
-                                    </div>
-                                  </Toggle>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
+                          <FormItem className='flex-1'>
+                            <FormLabel>From</FormLabel>
+                            <FormControl>
+                              <Input
+                                className='w-full'
+                                type='time'
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
                         )
-                      })}
+                      }}
+                    />
+                    <FormField
+                      control={createTripForm.control}
+                      name='numberOfPeople'
+                      render={({ field }) => {
+                        return (
+                          <FormItem className='flex-1'>
+                            <FormLabel>Total people</FormLabel>
+                            <FormControl>
+                              <Input
+                                className='block'
+                                type='number'
+                                min='1'
+                                max='5'
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )
+                      }}
+                    />
+                  </div>
+                  <FormField
+                    control={createTripForm.control}
+                    name='budget'
+                    render={({ field }) => (
+                      <FormItem className='space-y-3'>
+                        <FormLabel>My budget: {field.value}</FormLabel>
+                        <FormControl>
+                          <Slider
+                            onValueChange={values => {
+                              const value = values[0]
+                              if (value === 33) {
+                                field.onChange('Economy')
+                              } else if (value === 66) {
+                                field.onChange('Standard')
+                              } else {
+                                field.onChange('Luxury')
+                              }
+                            }}
+                            defaultValue={[33]}
+                            max={99}
+                            step={33}
+                            min={33}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </motion.div>
+                <motion.div
+                  className='px-4'
+                  initial={{
+                    opacity: 0,
+                    x: 100,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                  }}
+                >
+                  <h3 className='text-center text-lg mb-2'>
+                    Select your favourites activities
+                  </h3>
+                  {isLoading ? (
+                    <div className='flex justify-center'>
+                      <LoaderCircle className='animate-spin h-10 w-10' />
                     </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-          </div>
-          <Button type='submit' className='w-1/2 col-start-2 justify-self-end'>
-            Create trip
-          </Button>
-        </form>
+                  ) : (
+                    <FormField
+                      control={createTripForm.control}
+                      name='favouriteCategories'
+                      render={() => (
+                        <FormItem>
+                          <div className='flex items-center flex-col gap-3'>
+                            {activities.map((_, i) => {
+                              return (
+                                <div className='flex gap-4' key={i}>
+                                  {activities[i].map((activity, index) => (
+                                    <div key={i * ITEM_PER_ROW + index}>
+                                      <div key={i * ITEM_PER_ROW + index}>
+                                        <Toggle
+                                          className='flex gap-2 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground'
+                                          key={i * ITEM_PER_ROW + index}
+                                          variant='outline'
+                                          onClick={() => {
+                                            updateSelectedActivities({
+                                              target: {
+                                                value: activity,
+                                              },
+                                            })
+                                          }}
+                                        >
+                                          <div className='flex gap-2 items-center'>
+                                            {icon[activity]}
+                                            {activity}
+                                          </div>
+                                        </Toggle>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )
+                            })}
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </motion.div>
+              </>
+              <motion.div
+                className='col-start-2 justify-self-end'
+                initial={{
+                  opacity: 0,
+                  y: 100,
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                }}
+              >
+                <Button type='submit' className=''>
+                  Create trip
+                </Button>
+              </motion.div>
+            </form>
+          )}
+        </div>
       </Form>
     </main>
   )
