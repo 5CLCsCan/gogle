@@ -27,6 +27,9 @@ export default function Header() {
         <div className='flex gap-2'>
           {accessToken ? (
             <>
+              <Button variant='default'>
+                <Link href={'/create'}>Create trip</Link>
+              </Button>
               <Button className='bg-transparent text-md hover:bg-transparent rounded-full text-primary hover:opacity-80'>
                 <Link href={'/home'}>Home</Link>
               </Button>

@@ -5,7 +5,7 @@ import { encrypt, decrypt } from "./jwt";
 import { Payload } from "./jwt";
 import { cookies } from "next/headers";
 
-const expiredDuration = 24 * 60 * 60 * 1000
+const expiredDuration = 1000
 
 interface RegisterUserData {
   username: string
