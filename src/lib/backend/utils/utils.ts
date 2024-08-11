@@ -58,7 +58,7 @@ export function getTimeNumber(): number {
     return date.getHours() + date.getMinutes() / 60;
 }
 
-export function extractPlaceID(url: string): string {
+export function extractID(url: string): string {
     const parts = url.split('/');
     return parts[parts.length - 1];
 }

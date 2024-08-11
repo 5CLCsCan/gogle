@@ -36,7 +36,7 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
  */
 export async function GET(req: NextRequest) {
     try {
-        const placeID = utils.extractPlaceID(req.url);
+        const placeID = utils.extractID(req.url);
         const data: GetPlaceData = { placeID: placeID as string};
         const fetchedData = await getPlace(data);
         return new Response(JSON.stringify(fetchedData), jsonHeader);

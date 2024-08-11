@@ -11,9 +11,14 @@ const database = require('@/lib/backend/database')
  * /api/trip:
  *   get:
  *     summary: Get all trips of a user
- *     description: Retrieve all trips for a given user ID.
+ *     description: Retrieve all trips for a user identified by the provided token.
  *     parameters:
- * 
+ *       - name: decoded
+ *         in: header
+ *         required: true
+ *         description: The decoded authentication token to identify the user.
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: A JSON array of trips for the user.
@@ -29,7 +34,10 @@ const database = require('@/lib/backend/database')
  *                     description: The ID of the trip.
  *                   userID:
  *                     type: string
- *                     description: The ID of the user.
+ *                     description: The ID of the user who created the trip.
+ *                   tripName:
+ *                     type: string
+ *                     description: The name of the trip.
  *                   userFilter:
  *                     type: object
  *                     description: The filter criteria used for the trip.
@@ -58,7 +66,7 @@ const database = require('@/lib/backend/database')
  *                           type: string
  *                         description: The favorite categories for the trip.
  *       400:
- *         description: Missing or invalid userID parameter.
+ *         description: Missing or invalid authentication token.
  *         content:
  *           application/json:
  *             schema:
@@ -66,7 +74,12 @@ const database = require('@/lib/backend/database')
  *               properties:
  *                 status:
  *                   type: boolean
+ *                   description: Indicates if the operation was successful.
  *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: A message describing the error.
+ *                   example: "Missing or invalid authentication token."
  *       500:
  *         description: Internal server error.
  *         content:
@@ -76,12 +89,16 @@ const database = require('@/lib/backend/database')
  *               properties:
  *                 status:
  *                   type: boolean
+ *                   description: Indicates if the operation was successful.
  *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: A message describing the error.
+ *                   example: "Internal server error."
  */
 
 export async function GET(req: NextRequest) {
   try {
-    console.log(req.headers)
     const token = req.headers.get('decoded')
     if (!token) {
       return new Response(JSON.stringify({ status: false }))
@@ -158,6 +175,9 @@ export async function GET(req: NextRequest) {
  *                     userID:
  *                       type: string
  *                       description: The ID of the user who created the trip.
+ *                     tripName:
+ *                       type: string
+ *                       description: The name of the trip.
  *                     locationsID:
  *                       type: array
  *                       items:
@@ -262,6 +282,7 @@ export async function POST(req: NextRequest) {
     }
     const data: CreateTripData = {
       userID: userID,
+      tripName: parseData.tripName,
       startDate: parseData.startDate,
       startTime: parseData.startTime,
       tripLength: parseData.tripLength,
