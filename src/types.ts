@@ -6,10 +6,11 @@ export type MapCenterType = {
 }
 
 export type Place = {
+  id: string
   _id: string
   name: string
   address: string
-  latitute: number
+  latitude: number
   longitude: number
   imgLink: string
   openTime: string[]

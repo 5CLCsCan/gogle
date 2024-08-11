@@ -7,11 +7,23 @@ import { fetchData } from '@/utils/fetchData'
 import { Minus, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { use, useEffect, useState } from 'react'
+import { CreatTripStepPageProps } from '../[step]/page'
+import { closestCorners, DndContext } from '@dnd-kit/core'
+import {
+  horizontalListSortingStrategy,
+  SortableContext,
+} from '@dnd-kit/sortable'
+import MiniPlace from '@/components/MiniPlace'
 
-export default function SecondStep() {
+export default function SecondStep({
+  center,
+  radius,
+  selectedPlaces,
+  setSelectedPlaces,
+}: CreatTripStepPageProps) {
   const [recommendations, setRecommendations] = useState<PlaceType[]>([] as any)
   const [tripInfo, setTripInfo] = useState<Trip>(null as any)
-  const [selectedPlaces, setSelectedPlaces] = useState<PlaceType[]>([] as any)
+  // const [selectedPlaces, setSelectedPlaces] = useState<PlaceType[]>([] as any)
   const router = useRouter()
 
   const fetchRecommendations = async (tripID: string) => {
@@ -19,6 +31,9 @@ export default function SecondStep() {
     const data = await resp.json()
     console.log(data)
 
+    data.forEach((place: PlaceType) => {
+      place.id = place._id
+    })
     setRecommendations(data)
   }
 
@@ -40,20 +55,20 @@ export default function SecondStep() {
   const selectPlace = (id: string) => {
     const selectedPlace = recommendations.find(place => place._id === id)
     console.log(selectedPlace)
-    setSelectedPlaces([...selectedPlaces, selectedPlace!])
+    setSelectedPlaces!([...selectedPlaces!, selectedPlace!])
   }
 
   const removePlace = (id: string) => {
-    const newPlaces = selectedPlaces.filter(place => place._id !== id)
-    setSelectedPlaces(newPlaces)
+    const newPlaces = selectedPlaces!.filter(place => place._id !== id)
+    setSelectedPlaces!(newPlaces)
   }
 
   const updateTrip = async () => {
     const trip = JSON.parse(localStorage.getItem('trip')!)
-    trip.data.places = selectedPlaces.map(place => place._id)
+    trip.data.places = selectedPlaces!.map(place => place._id)
     console.log(trip)
 
-    selectedPlaces.forEach(async place => {
+    selectedPlaces!.forEach(async place => {
       const body = {
         placeID: place._id,
         tripID: trip.data._id,
@@ -67,78 +82,73 @@ export default function SecondStep() {
     router.push('/home')
   }
 
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event
+    if (active.id !== over.id) {
+      const oldIndex = selectedPlaces!.findIndex(
+        place => place.id === active.id,
+      )
+      const newIndex = selectedPlaces!.findIndex(place => place.id === over.id)
+
+      const newPlaces = [...selectedPlaces!]
+      newPlaces.splice(oldIndex, 1)
+      newPlaces.splice(newIndex, 0, selectedPlaces![oldIndex])
+
+      setSelectedPlaces!(newPlaces)
+    }
+  }
+
   return (
-    <div className='flex flex-col items-center gap-4'>
-      <div className='flex w-full items-center justify-center'>
-        <div className='w-2/3 flex gap-12'>
-          <div className='w-[40%] h-[500px] overflow-auto p-2 flex flex-col gap-6'>
-            <h1 className='text-primary text-3xl'>Building your adventure</h1>
-            <div className='flex gap-2'>
-              {selectedPlaces.map((place, index) => (
-                <div key={index} className='relative'>
-                  <img
-                    key={index}
-                    src={place.imgLink}
-                    alt='Placeholder'
-                    className='h-[60px] w-[60px] rounded-full'
-                  />
-                  <Button
-                    className='absolute top-0 right-0 h-[20px] w-[20px] rounded-full px-0'
-                    variant='destructive'
-                    onClick={() => removePlace(place._id)}
-                  >
-                    <Minus size={10} />
-                  </Button>
-                </div>
+    <>
+      <div className='h-[inherit] overflow-auto p-2 flex flex-col gap-6 mb-4'>
+        <h1 className='text-primary text-3xl'>Building your adventure</h1>
+        <div className='flex gap-2'>
+          <DndContext
+            collisionDetection={closestCorners}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={selectedPlaces!}
+              strategy={horizontalListSortingStrategy}
+            >
+              {selectedPlaces!.map((place, index) => (
+                <MiniPlace
+                  key={place.id}
+                  place={place}
+                  removePlace={removePlace}
+                  index={place.id}
+                />
               ))}
-              <Button
-                className='rounded-full h-[60px] w-[60px]'
-                variant='outline'
-              >
-                <Plus size={16} />
-              </Button>
-            </div>
-            <Input placeholder='Search for a location' className='self-start' />
-            <section className='grid grid-cols-2 gap-4'>
-              {recommendations.map((place, index) =>
-                selectedPlaces.includes(place) ? (
-                  <Place
-                    key={index}
-                    variant='selected'
-                    onClick={() => removePlace(place._id)}
-                    {...place}
-                  />
-                ) : (
-                  <Place
-                    key={index}
-                    variant='default'
-                    onClick={() => selectPlace(place._id)}
-                    {...place}
-                  />
-                ),
-              )}
-            </section>
-          </div>
-          <div className='w-[60%] h-[500px]'>
-            {tripInfo ? (
-              <Map
-                center={{
-                  lat: tripInfo.userFilter.latitude,
-                  lng: tripInfo.userFilter.longitude,
-                }}
-                radius={tripInfo.userFilter.maxDistance * 1000}
+            </SortableContext>
+          </DndContext>
+          <Button className='rounded-full h-[60px] w-[60px]' variant='outline'>
+            <Plus size={16} />
+          </Button>
+        </div>
+        <Input placeholder='Search for a location' className='self-start' />
+        <section className='grid grid-cols-2 gap-4'>
+          {recommendations.map((place, index) =>
+            selectedPlaces!.includes(place) ? (
+              <Place
+                key={index}
+                variant='selected'
+                onClick={() => removePlace(place._id)}
+                {...place}
               />
             ) : (
-              <p>Loading...</p>
-            )}
-          </div>
-        </div>
+              <Place
+                key={index}
+                variant='default'
+                onClick={() => selectPlace(place._id)}
+                {...place}
+              />
+            ),
+          )}
+        </section>
       </div>
-      <div className='w-2/3 flex flex-col'>
-        <Button className='self-end' onClick={updateTrip}>
-          Finish
-        </Button>
-      </div>
-    </div>
+      <Button className='self-end float-right' onClick={updateTrip}>
+        Finish
+      </Button>
+    </>
   )
 }

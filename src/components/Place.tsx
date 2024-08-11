@@ -15,7 +15,7 @@ export default function Place({
   variant,
 }: PlaceProps) {
   return (
-    <div>
+    <div key={_id}>
       <div className='relative hover:after:'>
         <img className='rounded-lg' src={imgLink} alt='Placeholder' key={_id} />
         <div className='opacity-0 hover:opacity-100 w-full left-0 right-0 bg-white/80 duration-300 absolute inset-0 z-10 flex justify-center items-center text-6xl text-white font-semibold'>

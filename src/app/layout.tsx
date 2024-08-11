@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={cn('min-h-screen flex flex-col', inter.className)}>
         <Header />
-        <main className='flex-1'>{children}</main>
+        {children}
         <footer className='mt-20 flex px-60 justify-between py-8'>
           <Image src='/logo.svg' alt='logo' width={100} height={100} />
           <section className='flex flex-col'>
