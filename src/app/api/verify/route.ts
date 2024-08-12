@@ -26,7 +26,14 @@ export async function GET(req: Request) {
   }
 
   // if token is expired
-  if (new Date(user.verifyTokenExpires) < new Date()) {
+  const now = new Date()
+  if (!user[0].verifyTokenExpires) {
+    return new Response(JSON.stringify({ error: 'Token not valid' }), {
+      status: 400,
+    })
+  }
+
+  if (user[0].verifyTokenExpires < now) {
     return new Response(JSON.stringify({ error: 'Token expired' }), {
       status: 400,
     })
@@ -35,7 +42,7 @@ export async function GET(req: Request) {
   const updateUser = await findAndUpdateData(
     UserModel,
     { verifyToken: token },
-    { isVerified: true, verifyToken: '' },
+    { isVerified: true, verifyToken: '', verifyTokenExpires: '' },
   )
 
   if (!updateUser) {
