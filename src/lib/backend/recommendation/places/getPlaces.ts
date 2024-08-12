@@ -3,7 +3,7 @@ import * as database from '@/lib/backend/database';
 import Places, { IPlace } from '@/models/PlaceSchema';
 import TripModel, { ITrip } from '@/models/TripSchema';
 import getRecommendCategory from "@/lib/backend/recommendation/category/getRecommendCategory";
-
+import IGetRCMPlaceData from "@/lib/backend/recommendation/category/IGetRCMdata";
 
 const LimitPlace = 10;
 const LimitPlacePerCategory = LimitPlace / 3;
@@ -113,14 +113,13 @@ function cleaningPlaces(places: IPlace[], time: number | undefined): IPlaceProje
     return result;
 }
 
-export async function getPlaces(tripID: string) : Promise<IPlaceProjection[] | string>{
-    const trip = await database.findData(TripModel, { _id: tripID });
+export async function getPlaces(rcm_data: IGetRCMPlaceData) : Promise<IPlaceProjection[] | string>{
+    const trip = await database.findData(TripModel, { _id: rcm_data.tripID });
     if (!trip || trip.length === 0) {
         return 'Trip not found';
     }
     
-    let categories = await getRecommendCategory(tripID);
-    
+    let categories = await getRecommendCategory(rcm_data);
     let query: QueryOptions = {
         lat: trip[0].last_latitude,
         long: trip[0].last_longitude,

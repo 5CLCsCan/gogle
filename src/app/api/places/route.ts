@@ -3,13 +3,14 @@ import addDestination, { AddDestinationData } from '@/lib/backend/updateData/add
 import removeDestination, { RemoveDestinationData } from '@/lib/backend/updateData/removeDestination';
 import { getPlaces } from "@/lib/backend/recommendation/places/getPlaces";
 import { jsonHeader } from "@/lib/backend/header/jsonheader";
+import IGetRCMPlaceData from "@/lib/backend/recommendation/category/IGetRCMdata";
 
 /**
  * @swagger
  * /api/places:
  *   get:
- *     summary: Retrieve a list of places for a given trip ID
- *     description: Retrieve a list of places associated with the specified trip ID.
+ *     summary: Retrieve a list of recommended places for a given trip ID
+ *     description: return a recommended places associated with the specified trip ID, optionally filtered by categories.
  *     parameters:
  *       - name: tripID
  *         in: query
@@ -17,6 +18,13 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
  *         description: The unique identifier of the trip.
  *         schema:
  *           type: string
+ *       - name: categories
+ *         in: query
+ *         required: false
+ *         description: A comma-separated list of categories to filter the places.
+ *         schema:
+ *           type: string
+ *           example: food/bar-pub,food/sang-trong
  *     responses:
  *       200:
  *         description: Successfully retrieved the list of places.
@@ -80,14 +88,24 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
  *                   description: A message detailing the server error.
  */
 
+
 export async function GET(req: NextRequest) {
     const url = new URL(req.url);
-    const search_params = new URLSearchParams(url.searchParams);
-    const tripID = search_params.get('tripID');
-    if (!tripID) {
+    const searchParams = new URLSearchParams(url.searchParams);
+    const parseTripID = searchParams.get('tripID');
+    const categories = searchParams.get('categories');
+
+    if (!parseTripID) {
         return new Response(JSON.stringify({ error: "Missing tripID" }), { status: 400 });
     }
-    const places = await getPlaces(tripID);
+
+    const categoryList = categories ? categories.split(',') : [];
+    const data: IGetRCMPlaceData = {
+        tripID: parseTripID,
+        category_list: categoryList
+    };
+
+    const places = await getPlaces(data);
     return new Response(JSON.stringify(places), jsonHeader);
 }
 
