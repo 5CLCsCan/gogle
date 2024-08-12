@@ -27,9 +27,7 @@ export const GogleWelcomeEmail = ({
 }: GogleWelcomeEmailProps) => (
   <Html>
     <Head />
-    <Preview>
-      The sales intelligence platform that helps you uncover qualified leads.
-    </Preview>
+    <Preview>The trip planning website that you need (or not).</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -41,8 +39,8 @@ export const GogleWelcomeEmail = ({
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
         <Text style={paragraph}>
-          Welcome to Gogle, the sales intelligence platform that helps you
-          uncover qualified leads and close deals faster.
+          Welcome to Gogle, Discover your perfect adventure. Plan, book, and
+          explore with Gogle.
         </Text>
         <Section style={btnContainer}>
           <Button style={button} href={link}>
@@ -50,14 +48,12 @@ export const GogleWelcomeEmail = ({
           </Button>
         </Section>
         <Text style={paragraph}>
-          Best,
+          Best regard,
           <br />
-          The Gogle team
+          5CLCsCan
         </Text>
         <Hr style={hr} />
-        <Text style={footer}>
-          470 Noor Ave STE B #1148, South San Francisco, CA 94080
-        </Text>
+        <Text style={footer}>227 Nguyen Van Cu, Q.5, TP.HCM</Text>
       </Container>
     </Body>
   </Html>

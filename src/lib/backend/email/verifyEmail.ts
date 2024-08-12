@@ -30,12 +30,14 @@ async function sendVerifyEmail(email: string, username: string): Promise<void> {
     { verifyToken: verifyToken },
   )
 
+  console.log(email)
+
   if (!updatedUser) {
     throw new Error('Error updating user')
   }
 
   const { data, error } = await resend.emails.send({
-    from: 'Acme <onboarding@resend.dev>',
+    from: 'Gogle <noreply@resend.dev>',
     to: [email],
     subject: 'Thank you for registering with us',
     html: render(WelcomeTemplate({ userFirstname: username, link: link })),
