@@ -1,8 +1,8 @@
 import recommendationSystem from '@/lib/backend/recommendation/category/recommendationSystem';
-import { ITrip } from '@/models/TripSchema';
+import IGetRCMPlaceData from './IGetRCMdata';
 
-export default async function getRecommendCategory(tripID: string | ITrip) {
-    const recommendations = await recommendationSystem.getRecommendations(tripID);
+export default async function getRecommendCategory(tripData: IGetRCMPlaceData): Promise<string[]> {
+    const recommendations = await recommendationSystem.getRecommendations(tripData);
     if (!recommendations) {
         return [];
     }
