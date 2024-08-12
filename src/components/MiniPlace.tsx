@@ -26,20 +26,22 @@ export default function MiniPlace({
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      key={place.id}
       className='relative'
       style={style}
     >
       <img
-        key={index}
         src={place.imgLink}
         alt='Placeholder'
         className='h-[60px] w-[60px] rounded-full'
       />
       <Button
-        className='absolute top-0 right-0 h-[20px] w-[20px] rounded-full px-0'
+        className='absolute top-0 right-0 h-[20px] w-[20px] rounded-full px-0 pointer-events-auto'
         variant='destructive'
-        onClick={() => removePlace(place._id)}
+        onPointerDown={e => e.stopPropagation()}
+        onClick={e => {
+          // e.stopPropagation()
+          removePlace(place.id)
+        }}
       >
         <Minus size={10} />
       </Button>

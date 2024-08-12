@@ -72,9 +72,12 @@ function HomePage() {
               className='border border-gray-400 px-4 py-8 rounded-lg shadow-md'
             >
               <Link href={`/trip/${trip._id}`}>
-                <h4 className='text-2xl'>{trip._id}</h4>
+                <h4 className='text-2xl'>{trip.tripName}</h4>
               </Link>
-              <p>{trip.userFilter.date}</p>
+              <p>
+                Created at:{' '}
+                {new Date(trip.userFilter.date).toLocaleDateString()}
+              </p>
               <Button
                 variant='destructive'
                 className='float-right'

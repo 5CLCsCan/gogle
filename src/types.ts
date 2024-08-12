@@ -18,6 +18,7 @@ export type Place = {
 }
 
 export type Trip = {
+  tripName: string
   _id: string
   userID: string
   userFilter: {

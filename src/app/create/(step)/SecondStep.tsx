@@ -8,7 +8,13 @@ import { Minus, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { use, useEffect, useState } from 'react'
 import { CreatTripStepPageProps } from '../[step]/page'
-import { closestCorners, DndContext } from '@dnd-kit/core'
+import {
+  closestCorners,
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
 import {
   horizontalListSortingStrategy,
   SortableContext,
@@ -16,8 +22,6 @@ import {
 import MiniPlace from '@/components/MiniPlace'
 
 export default function SecondStep({
-  center,
-  radius,
   selectedPlaces,
   setSelectedPlaces,
 }: CreatTripStepPageProps) {
@@ -25,13 +29,20 @@ export default function SecondStep({
   const [tripInfo, setTripInfo] = useState<Trip>(null as any)
   // const [selectedPlaces, setSelectedPlaces] = useState<PlaceType[]>([] as any)
   const router = useRouter()
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+  )
 
   const fetchRecommendations = async (tripID: string) => {
     const resp = await fetchData('GET', `places?tripID=${tripID}`)
     const data = await resp.json()
     console.log(data)
 
-    data.forEach((place: PlaceType) => {
+    data.forEach((place: PlaceType, index: number) => {
       place.id = place._id
     })
     setRecommendations(data)
@@ -59,7 +70,7 @@ export default function SecondStep({
   }
 
   const removePlace = (id: string) => {
-    const newPlaces = selectedPlaces!.filter(place => place._id !== id)
+    const newPlaces = selectedPlaces!.filter(place => place.id !== id)
     setSelectedPlaces!(newPlaces)
   }
 
@@ -67,8 +78,9 @@ export default function SecondStep({
     const trip = JSON.parse(localStorage.getItem('trip')!)
     trip.data.places = selectedPlaces!.map(place => place._id)
     console.log(trip)
+    console.log(selectedPlaces)
 
-    selectedPlaces!.forEach(async place => {
+    for (const place of selectedPlaces!) {
       const body = {
         placeID: place._id,
         tripID: trip.data._id,
@@ -76,7 +88,7 @@ export default function SecondStep({
       const resp = await fetchData('POST', `places`, 0, body)
       const data = await resp.json()
       console.log(data)
-    })
+    }
 
     localStorage.removeItem('trip')
     router.push('/home')
@@ -112,12 +124,13 @@ export default function SecondStep({
               strategy={horizontalListSortingStrategy}
             >
               {selectedPlaces!.map((place, index) => (
-                <MiniPlace
-                  key={place.id}
-                  place={place}
-                  removePlace={removePlace}
-                  index={place.id}
-                />
+                <div key={`mini-${place.id}`} className='relative'>
+                  <MiniPlace
+                    place={place}
+                    removePlace={removePlace}
+                    index={place.id}
+                  />
+                </div>
               ))}
             </SortableContext>
           </DndContext>
@@ -132,7 +145,7 @@ export default function SecondStep({
               <Place
                 key={index}
                 variant='selected'
-                onClick={() => removePlace(place._id)}
+                onClick={() => removePlace(place.id)}
                 {...place}
               />
             ) : (

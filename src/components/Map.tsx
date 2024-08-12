@@ -7,20 +7,19 @@ import 'leaflet-defaulticon-compatibility'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css'
 import { MapCenterType, Place } from '@/types'
 import L from 'leaflet'
+import { useCenterStore, useRadiusStore } from '@/store'
 
 interface MapProps {
-  center: MapCenterType
-  radius: number
   selectedPlaces: Place[]
 }
 
-export default function Map({ center, radius, selectedPlaces }: MapProps) {
-  console.log(center)
-
+export default function Map({ selectedPlaces }: MapProps) {
+  const center = useCenterStore(state => state.center)
+  const radius = useRadiusStore(state => state.radius)
   return (
     <MapContainer
       center={center}
-      zoom={16}
+      zoom={13}
       scrollWheelZoom={false}
       className='w-full h-full'
     >

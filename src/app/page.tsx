@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { Poppins } from 'next/font/google';
-import { motion } from 'framer-motion';
-import { LucideCircleChevronDown } from 'lucide-react';
-import SparklesText from '@/components/magicui/sparkles-text';
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { Poppins } from 'next/font/google'
+import { motion } from 'framer-motion'
+import { LucideCircleChevronDown } from 'lucide-react'
+import SparklesText from '@/components/magicui/sparkles-text'
 
-const poppins = Poppins({ subsets: ['latin'], weight: ['400', '600'] });
+const poppins = Poppins({ subsets: ['latin'], weight: ['400', '600'] })
 
 const motionProps = {
   transition: {
@@ -16,7 +16,7 @@ const motionProps = {
   viewport: {
     once: true,
   },
-};
+}
 
 export default function Home() {
   return (
@@ -38,7 +38,7 @@ export default function Home() {
             <h1
               className={cn(
                 'text-6xl font-semibold leading-snug tracking-wider',
-                poppins.className
+                poppins.className,
               )}
             >
               Planning Your<br></br> Wonderful{' '}
@@ -133,5 +133,5 @@ export default function Home() {
         </div>
       </motion.section>
     </main>
-  );
+  )
 }

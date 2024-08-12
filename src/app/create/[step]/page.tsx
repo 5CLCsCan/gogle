@@ -13,10 +13,6 @@ type CreateTripStepPage = {
 }
 
 export type CreatTripStepPageProps = {
-  center: MapCenterType
-  setCenter: (center: MapCenterType) => void
-  radius: number
-  setRadius: (radius: number) => void
   selectedPlaces?: Place[]
   setSelectedPlaces?: (places: Place[]) => void
 }
@@ -36,8 +32,6 @@ export const defaultCenter: MapCenterType = {
 }
 
 export default function CreateTripStepPage({ params }: CreateTripStepPage) {
-  const [center, setCenter] = useState<MapCenterType>(defaultCenter)
-  const [radius, setRadius] = useState<number>(0)
   const [selectedPlaces, setSelectedPlaces] = useState<Place[]>([])
   const Map = useMemo(
     () =>
@@ -45,7 +39,7 @@ export default function CreateTripStepPage({ params }: CreateTripStepPage) {
         loading: () => <p>A map is loading</p>,
         ssr: false,
       }),
-    [center, radius, selectedPlaces],
+    [selectedPlaces],
   )
   const { step } = params
   return (
@@ -53,20 +47,12 @@ export default function CreateTripStepPage({ params }: CreateTripStepPage) {
       <div className='h-[500px] flex gap-12 w-2/3'>
         <div className='w-[40%] h-[inherit]'>
           {steps[step]({
-            center,
-            setCenter,
-            radius,
-            setRadius,
             selectedPlaces,
             setSelectedPlaces,
           })}
         </div>
         <div className='w-[60%]'>
-          <Map
-            center={center}
-            radius={radius}
-            selectedPlaces={selectedPlaces}
-          />
+          <Map selectedPlaces={selectedPlaces} />
         </div>
       </div>
     </section>

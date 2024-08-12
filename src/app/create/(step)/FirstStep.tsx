@@ -22,6 +22,7 @@ import { useDebounce } from '@/hooks/useDebounce'
 import { useRouter } from 'next/navigation'
 import { fetchData } from '@/utils/fetchData'
 import { CreatTripStepPageProps, defaultCenter } from '../[step]/page'
+import { useCenterStore, useRadiusStore } from '@/store'
 
 const createTripFirstStepSchema = z.object({
   startLocation: z.string(),
@@ -33,12 +34,10 @@ const createTripFirstStepSchema = z.object({
 
 const defaultAddress = '227 Nguyen Van Cu, District 5, Ho Chi Minh City'
 
-export default function FirstStep({
-  center,
-  setCenter,
-  radius,
-  setRadius,
-}: CreatTripStepPageProps) {
+export default function FirstStep({}: CreatTripStepPageProps) {
+  const center = useCenterStore(state => state.center)
+  const setCenter = useCenterStore(state => state.setCenter)
+  const setRadius = useRadiusStore(state => state.setRadius)
   const [address, setAddress] = useState(defaultAddress)
   const debouncedPosition = useDebounce(address, 500)
   const [tripData, setTripData] = useState<any>({})
