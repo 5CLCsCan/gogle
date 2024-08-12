@@ -7,7 +7,7 @@ import { fetchData } from '@/utils/fetchData'
 import { Minus, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { use, useEffect, useState } from 'react'
-import { CreatTripStepPageProps } from '../[step]/page'
+import { CreatTripStepPageProps } from '@/types'
 import {
   closestCorners,
   DndContext,

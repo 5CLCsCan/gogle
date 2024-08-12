@@ -42,3 +42,8 @@ export type Trip = {
   last_latitude: number
   last_longitude: number
 }
+
+export type CreatTripStepPageProps = {
+  selectedPlaces?: Place[]
+  setSelectedPlaces?: (places: Place[]) => void
+}

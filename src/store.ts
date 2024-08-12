@@ -6,11 +6,13 @@ type CenterStore = {
   setCenter: (center: MapCenterType) => void
 }
 
+export const defaultCenter: MapCenterType = {
+  lat: 10.762328,
+  lng: 106.6827293,
+}
+
 export const useCenterStore = create<CenterStore>(set => ({
-  center: {
-    lat: 10.762328,
-    lng: 106.6827293,
-  },
+  center: defaultCenter,
   setCenter: center => set({ center }),
 }))
 

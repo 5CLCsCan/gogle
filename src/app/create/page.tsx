@@ -32,19 +32,17 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Input } from '@/components/ui/input'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Slider } from '@/components/ui/slider'
 import { Suspense, useEffect, useMemo, useState } from 'react'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Toggle } from '@/components/ui/toggle'
 import { fetchData } from '@/utils/fetchData'
-import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import FirstStep from './(step)/FirstStep'
 import SecondStep from './(step)/SecondStep'
 import { Place } from '@/types'
 import dynamic from 'next/dynamic'
 import { useCenterStore, useRadiusStore } from '@/store'
+import { CreatTripStepPageProps } from '@/types'
 
 const createTripSchema = z.object({
   tripName: z.string().min(1),
@@ -68,8 +66,8 @@ const icon: Icon = {
 }
 
 const Steps = [
-  props => <FirstStep {...props} />,
-  props => <SecondStep {...props} />,
+  (props: CreatTripStepPageProps) => <FirstStep {...props} />,
+  (props: CreatTripStepPageProps) => <SecondStep {...props} />,
 ]
 
 export default function CreateTripPage() {

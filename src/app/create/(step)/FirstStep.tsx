@@ -21,8 +21,8 @@ import { Toaster } from '@/components/ui/toaster'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useRouter } from 'next/navigation'
 import { fetchData } from '@/utils/fetchData'
-import { CreatTripStepPageProps, defaultCenter } from '../[step]/page'
-import { useCenterStore, useRadiusStore } from '@/store'
+import { CreatTripStepPageProps } from '@/types'
+import { defaultCenter, useCenterStore, useRadiusStore } from '@/store'
 
 const createTripFirstStepSchema = z.object({
   startLocation: z.string(),
