@@ -79,4 +79,4 @@ async function loginUser(data: LoginUserData): Promise<TokenObject> {
   return await generateToken(email)
 }
 
-export { registerUser, loginUser, generateToken }
+export { registerUser, loginUser, generateToken, expiredDuration }

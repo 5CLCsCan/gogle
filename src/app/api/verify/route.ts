@@ -1,4 +1,4 @@
-import { findAndUpdateData } from '@/lib/backend/database'
+import { findAndUpdateData, findData } from '@/lib/backend/database'
 
 import UserModel from '@/models/UserSchema'
 
@@ -16,13 +16,29 @@ export async function GET(req: Request) {
     })
   }
 
-  const user = await findAndUpdateData(
+  // find user by verify token
+  const user = await findData(UserModel, { verifyToken: token })
+
+  if (!user) {
+    return new Response(JSON.stringify({ error: 'User not found' }), {
+      status: 404,
+    })
+  }
+
+  // if token is expired
+  if (new Date(user.verifyTokenExpires) < new Date()) {
+    return new Response(JSON.stringify({ error: 'Token expired' }), {
+      status: 400,
+    })
+  }
+
+  const updateUser = await findAndUpdateData(
     UserModel,
     { verifyToken: token },
     { isVerified: true, verifyToken: '' },
   )
 
-  if (!user) {
+  if (!updateUser) {
     return new Response(JSON.stringify({ error: 'User not found' }), {
       status: 404,
     })

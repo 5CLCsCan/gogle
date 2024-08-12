@@ -10,6 +10,8 @@ import { addData, findData, findAndUpdateData } from '../database'
 
 import { v4 as uuidv4 } from 'uuid'
 
+import { expiredDuration } from '../authentication/authentication'
+
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 async function sendVerifyEmail(email: string, username: string): Promise<void> {
@@ -21,13 +23,17 @@ async function sendVerifyEmail(email: string, username: string): Promise<void> {
 
   // generate verify token
   const verifyToken = uuidv4()
+
+  // expiration time
+  const verifyTokenExpires = new Date(Date.now() + expiredDuration)
+
   const link = `${process.env.DOMAIN}/api/verify?token=${verifyToken}`
 
   // save verify token to user
   const updatedUser = await findAndUpdateData(
     UserModel,
     { email: email },
-    { verifyToken: verifyToken },
+    { verifyToken: verifyToken, verifyTokenExpires: verifyTokenExpires },
   )
 
   console.log(email)

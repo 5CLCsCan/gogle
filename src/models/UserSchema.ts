@@ -6,6 +6,7 @@ interface IUser extends Document {
   password: string
   isVerified: boolean
   verifyToken?: string
+  verifyTokenExpires?: Date
 }
 
 const UserSchema: Schema<IUser> = new mongoose.Schema({
@@ -28,6 +29,10 @@ const UserSchema: Schema<IUser> = new mongoose.Schema({
   verifyToken: {
     type: String,
     default: '',
+  },
+  verifyTokenExpires: {
+    type: Date,
+    default: Date.now,
   },
 })
 
