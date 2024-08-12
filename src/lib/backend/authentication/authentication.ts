@@ -1,9 +1,10 @@
-import bcrypt from "bcryptjs";
-import { connectDB, addData, findData } from "@/lib/backend/database";
-import UserModel from "@/models/UserSchema";
-import { encrypt, decrypt } from "./jwt";
-import { Payload } from "./jwt";
-import { cookies } from "next/headers";
+import bcrypt from 'bcryptjs'
+import { connectDB, addData, findData } from '@/lib/backend/database'
+import UserModel from '@/models/UserSchema'
+import { encrypt, decrypt } from './jwt'
+import { Payload } from './jwt'
+import { cookies } from 'next/headers'
+import { sendVerifyEmail } from '../email/verifyEmail'
 
 const expiredDuration = 24 * 60 * 60 * 1000
 
@@ -46,6 +47,10 @@ async function registerUser(data: RegisterUserData): Promise<TokenObject> {
   const user = new UserModel({ username, email, password: hashedPassword })
   const status = await addData(user)
 
+  if (status) {
+    await sendVerifyEmail(email, username)
+  }
+
   if (!status) {
     return { error: 'Internal Server Error', token: '' } as TokenObject
   }
@@ -64,6 +69,11 @@ async function loginUser(data: LoginUserData): Promise<TokenObject> {
   const match = await bcrypt.compare(password, user[0].password)
   if (!match) {
     return { error: 'Invalid email or password', token: '' } as TokenObject
+  }
+
+  // check if user is verified
+  if (!user[0].isVerified) {
+    return { error: 'User not verified', token: '' } as TokenObject
   }
 
   return await generateToken(email)

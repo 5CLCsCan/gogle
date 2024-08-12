@@ -12,17 +12,19 @@ import {
 } from '@react-email/components'
 import * as React from 'react'
 
-interface KoalaWelcomeEmailProps {
+interface GogleWelcomeEmailProps {
   userFirstname: string
+  link: string
 }
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : ''
 
-export const KoalaWelcomeEmail = ({
+export const GogleWelcomeEmail = ({
   userFirstname,
-}: KoalaWelcomeEmailProps) => (
+  link,
+}: GogleWelcomeEmailProps) => (
   <Html>
     <Head />
     <Preview>
@@ -31,26 +33,26 @@ export const KoalaWelcomeEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Img
-          src={`${baseUrl}/static/koala-logo.png`}
+          src={`${baseUrl}/static/Gogle-logo.png`}
           width='170'
           height='50'
-          alt='Koala'
+          alt='Gogle'
           style={logo}
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
         <Text style={paragraph}>
-          Welcome to Koala, the sales intelligence platform that helps you
+          Welcome to Gogle, the sales intelligence platform that helps you
           uncover qualified leads and close deals faster.
         </Text>
         <Section style={btnContainer}>
-          <Button style={button} href='https://getkoala.com'>
+          <Button style={button} href={link}>
             Get started
           </Button>
         </Section>
         <Text style={paragraph}>
           Best,
           <br />
-          The Koala team
+          The Gogle team
         </Text>
         <Hr style={hr} />
         <Text style={footer}>
@@ -61,11 +63,11 @@ export const KoalaWelcomeEmail = ({
   </Html>
 )
 
-KoalaWelcomeEmail.PreviewProps = {
+GogleWelcomeEmail.PreviewProps = {
   userFirstname: 'Alan',
-} as KoalaWelcomeEmailProps
+} as GogleWelcomeEmailProps
 
-export default KoalaWelcomeEmail
+export default GogleWelcomeEmail
 
 const main = {
   backgroundColor: '#ffffff',

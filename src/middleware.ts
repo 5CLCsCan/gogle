@@ -36,5 +36,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/api/:path((?!auth/signin|auth/signup|test|mail$).*)'],
+  matcher: ['/api/:path((?!auth/signin|auth/signup|test|mail|verify$).*)'],
 }
