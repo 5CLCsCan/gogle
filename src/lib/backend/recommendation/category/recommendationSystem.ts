@@ -4,6 +4,7 @@ import { RankingSystem } from '@/lib/backend/recommendation/category/rankingSyst
 import { findData } from '@/lib/backend/database'
 import TripModel, { ITrip } from '@/models/TripSchema'
 import getCategory from '../../updateData/getCategoryList'
+import IGetRCMPlaceData from './IGetRCMdata'
 
 export class RecommendationSystem {
   userState: UserState
@@ -48,30 +49,33 @@ export class RecommendationSystem {
     this.chosenPlace = chosenPlace
   }
 
-  async initRecommendationSystem(tripID: string | ITrip) {
+  async initRecommendationSystem(rcm_data: IGetRCMPlaceData) {
     try {
+      const tripID = rcm_data.tripID
       var trip: ITrip
-      if (typeof tripID === 'object') {
-        trip = tripID
-      } else {
-        const trips: ITrip[] | null = await findData(TripModel, { _id: tripID })
-        if (!trips || trips.length === 0) {
-          console.log('Trip not found')
-          return
-        }
-        trip = trips[0]
+      const trips: ITrip[] | null = await findData(TripModel, { _id: tripID })
+      if (!trips || trips.length === 0) {
+        console.log('Trip not found')
+        return
       }
-      const chosenPlaceCategory = await getCategory(trip.locationsID)
+      trip = trips[0]
       if (trip.userState) this.setUserState(trip.userState)
-      if (chosenPlaceCategory) this.setChosenPlace(chosenPlaceCategory)
       if (trip.userFilter) this.setFilter(trip.userFilter)
+      
+      if (rcm_data.category_list && rcm_data.category_list.length > 0) 
+        this.setChosenPlace(rcm_data.category_list)
+      else {
+        const chosenPlaceCategory = await getCategory(trip.locationsID)
+        if (chosenPlaceCategory) this.setChosenPlace(chosenPlaceCategory)
+      }
+
     } catch (err) {
       console.error('Error initializing recommendation system:', err)
     }
   }
 
-  async getRecommendations(tripID: string | ITrip) {
-    await this.initRecommendationSystem(tripID)
+  async getRecommendations(rcm_data: IGetRCMPlaceData) {
+    await this.initRecommendationSystem(rcm_data)
     this.rankingSystem.resetScore()
     this.userState.resetState(this.chosenPlace ? this.chosenPlace : [])
     this.recommend()
