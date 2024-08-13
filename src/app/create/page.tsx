@@ -434,7 +434,7 @@ export default function CreateTripPage() {
       ) : (
         <div className='flex gap-12 h-[500px] w-2/3'>
           <div className='w-[40%]'>
-            {Steps[index]({ selectedPlaces, setSelectedPlaces })}
+            {Steps[index]({ selectedPlaces, setSelectedPlaces, setIndex })}
           </div>
           <div className='w-[60%]'>
             <Map selectedPlaces={selectedPlaces} />

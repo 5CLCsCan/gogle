@@ -34,7 +34,7 @@ const createTripFirstStepSchema = z.object({
 
 const defaultAddress = '227 Nguyen Van Cu, District 5, Ho Chi Minh City'
 
-export default function FirstStep({}: CreatTripStepPageProps) {
+export default function FirstStep({ setIndex }: CreatTripStepPageProps) {
   const center = useCenterStore(state => state.center)
   const setCenter = useCenterStore(state => state.setCenter)
   const setRadius = useRadiusStore(state => state.setRadius)
@@ -73,7 +73,7 @@ export default function FirstStep({}: CreatTripStepPageProps) {
     }
     const data = await resp.json()
     localStorage.setItem('trip', JSON.stringify(data))
-    router.push('/create/2')
+    setIndex(1)
   }
 
   const setToCurrentLocation = () => {

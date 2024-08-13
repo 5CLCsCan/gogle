@@ -112,7 +112,7 @@ export default function SecondStep({
 
   return (
     <>
-      <div className='h-[inherit] overflow-auto p-2 flex flex-col gap-6 mb-4'>
+      <div className='h-full p-2 flex flex-col gap-6 mb-4'>
         <h1 className='text-primary text-3xl'>Building your adventure</h1>
         <div className='flex gap-2'>
           <DndContext
@@ -139,7 +139,7 @@ export default function SecondStep({
           </Button>
         </div>
         <Input placeholder='Search for a location' className='self-start' />
-        <section className='grid grid-cols-2 gap-4'>
+        <section className='grid grid-cols-2 gap-4 overflow-auto'>
           {recommendations.map((place, index) =>
             selectedPlaces!.includes(place) ? (
               <Place

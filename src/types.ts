@@ -46,4 +46,5 @@ export type Trip = {
 export type CreatTripStepPageProps = {
   selectedPlaces?: Place[]
   setSelectedPlaces?: (places: Place[]) => void
+  setIndex: (index: number) => void
 }
