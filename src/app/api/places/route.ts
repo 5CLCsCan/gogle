@@ -3,20 +3,30 @@ import addDestination, { AddDestinationData } from '@/lib/backend/updateData/add
 import removeDestination, { RemoveDestinationData } from '@/lib/backend/updateData/removeDestination';
 import { getPlaces } from "@/lib/backend/recommendation/places/getPlaces";
 import { jsonHeader } from "@/lib/backend/header/jsonheader";
+import IGetRCMPlaceData from "@/lib/backend/recommendation/category/IGetRCMdata";
 
 /**
  * @swagger
  * /api/places:
- *   get:
- *     summary: Retrieve a list of places for a given trip ID
- *     description: Retrieve a list of places associated with the specified trip ID.
- *     parameters:
- *       - name: tripID
- *         in: query
- *         required: true
- *         description: The unique identifier of the trip.
- *         schema:
- *           type: string
+ *   post:
+ *     summary: Retrieve a list of recommended places for a given trip ID
+ *     description: Returns a list of recommended places associated with the specified trip ID, optionally filtered by categories. The method now requires a JSON body containing the `categories` instead of receiving it as a query parameter.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tripID:
+ *                 type: string
+ *                 description: The unique identifier of the trip.
+ *                 example: "12345"
+ *               categories:
+ *                 type: string
+ *                 nullable: true
+ *                 description: A comma-separated list of categories to filter the places.
+ *                 example: "food/bar-pub,food/sang-trong"
  *     responses:
  *       200:
  *         description: Successfully retrieved the list of places.
@@ -58,7 +68,7 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
  *                       type: number
  *                     example: [50000, 100000]
  *       400:
- *         description: Bad Request. The request is missing the required tripID query parameter.
+ *         description: Bad Request. The request is missing the required tripID in the JSON body.
  *         content:
  *           application/json:
  *             schema:
@@ -80,14 +90,26 @@ import { jsonHeader } from "@/lib/backend/header/jsonheader";
  *                   description: A message detailing the server error.
  */
 
-export async function GET(req: NextRequest) {
+
+export async function POST(req: NextRequest) {
     const url = new URL(req.url);
-    const search_params = new URLSearchParams(url.searchParams);
-    const tripID = search_params.get('tripID');
-    if (!tripID) {
+    const searchParams = new URLSearchParams(url.searchParams);
+    // const parseTripID = searchParams.get('tripID');
+    // const categories = searchParams.get('categories');
+    const parseData = await req.json();
+    const parseTripID = parseData.tripID;
+    const categories = parseData.categories;
+    if (!parseTripID) {
         return new Response(JSON.stringify({ error: "Missing tripID" }), { status: 400 });
     }
-    const places = await getPlaces(tripID);
+
+    // const categoryList = categories ? categories.split(',') : [];
+    const data: IGetRCMPlaceData = {
+        tripID: parseTripID,
+        category_list: categories
+    };
+
+    const places = await getPlaces(data);
     return new Response(JSON.stringify(places), jsonHeader);
 }
 
@@ -95,9 +117,9 @@ export async function GET(req: NextRequest) {
 /**
  * @swagger
  * /api/places:
- *   post:
+ *   put:
  *     summary: Add a destination to a trip
- *     description: Add a new destination to a trip by providing the trip ID and place ID.
+ *     description: Add a new destination to a trip by providing the trip ID and place ID. This endpoint expects a JSON payload with `tripID` and `placeID`.
  *     requestBody:
  *       required: true
  *       content:
@@ -108,9 +130,11 @@ export async function GET(req: NextRequest) {
  *               tripID:
  *                 type: string
  *                 description: The ID of the trip.
+ *                 example: "12345"
  *               placeID:
  *                 type: string
  *                 description: The ID of the place to add.
+ *                 example: "67890"
  *     responses:
  *       200:
  *         description: A JSON object indicating the success status.
@@ -121,10 +145,22 @@ export async function GET(req: NextRequest) {
  *               properties:
  *                 status:
  *                   type: boolean
+ *                   description: Indicates whether the operation was successful.
+ *                   example: true
  *       500:
- *         description: Internal server error.
+ *         description: Internal server error. An unexpected error occurred while processing the request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: boolean
+ *                   description: Indicates whether the operation was successful.
+ *                   example: false
  */
-export async function POST(req: NextRequest) {
+
+export async function PUT(req: NextRequest) {
     try {
         const parseData = await req.json();
         const data: AddDestinationData = {
