@@ -436,7 +436,7 @@ export default function CreateTripPage() {
           <div className='w-[40%]'>
             {Steps[index]({ selectedPlaces, setSelectedPlaces, setIndex })}
           </div>
-          <div className='w-[60%]'>
+          <div className='w-[60%] relative'>
             <Map selectedPlaces={selectedPlaces} />
           </div>
         </div>

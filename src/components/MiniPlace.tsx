@@ -40,7 +40,7 @@ export default function MiniPlace({
         onPointerDown={e => e.stopPropagation()}
         onClick={e => {
           // e.stopPropagation()
-          removePlace(place.id)
+          removePlace(place._id)
         }}
       >
         <Minus size={10} />

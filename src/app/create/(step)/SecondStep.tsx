@@ -4,22 +4,17 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Place as PlaceType, Trip } from '@/types'
 import { fetchData } from '@/utils/fetchData'
-import { Minus, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CreatTripStepPageProps } from '@/types'
-import {
-  closestCorners,
-  DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
+import { closestCorners, DndContext } from '@dnd-kit/core'
 import {
   horizontalListSortingStrategy,
   SortableContext,
 } from '@dnd-kit/sortable'
 import MiniPlace from '@/components/MiniPlace'
+import { useDebounce } from '@/hooks/useDebounce'
 
 export default function SecondStep({
   selectedPlaces,
@@ -27,15 +22,11 @@ export default function SecondStep({
 }: CreatTripStepPageProps) {
   const [recommendations, setRecommendations] = useState<PlaceType[]>([] as any)
   const [tripInfo, setTripInfo] = useState<Trip>(null as any)
-  // const [selectedPlaces, setSelectedPlaces] = useState<PlaceType[]>([] as any)
+  const [searchQuery, setSearchQuery] = useState('')
+  const debouncedSearchQuery = useDebounce(searchQuery, 500)
+  const [searchedPlaces, setSearchedPlaces] = useState<PlaceType[]>([] as any)
+  const [displayPlaces, setDisplayPlaces] = useState<PlaceType[]>([] as any)
   const router = useRouter()
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 10,
-      },
-    }),
-  )
 
   const fetchRecommendations = async (tripID: string) => {
     const resp = await fetchData('GET', `places?tripID=${tripID}`)
@@ -46,6 +37,7 @@ export default function SecondStep({
       place.id = place._id
     })
     setRecommendations(data)
+    setDisplayPlaces(data)
   }
 
   useEffect(() => {
@@ -64,7 +56,7 @@ export default function SecondStep({
   }, [tripInfo])
 
   const selectPlace = (id: string) => {
-    const selectedPlace = recommendations.find(place => place._id === id)
+    const selectedPlace = displayPlaces.find(place => place._id === id)
     console.log(selectedPlace)
     setSelectedPlaces!([...selectedPlaces!, selectedPlace!])
   }
@@ -110,6 +102,30 @@ export default function SecondStep({
     }
   }
 
+  useEffect(() => {
+    if (debouncedSearchQuery === '') {
+      setSearchedPlaces([])
+      setDisplayPlaces(recommendations)
+      return
+    }
+
+    const fetchPlaces = async () => {
+      const resp = await fetchData(
+        'GET',
+        `search?query=${debouncedSearchQuery}`,
+      )
+      const data = await resp.json()
+      console.log(data)
+      data.forEach((place: PlaceType, index: number) => {
+        place.id = place._id
+      })
+
+      setSearchedPlaces(data)
+      setDisplayPlaces(data)
+    }
+    fetchPlaces()
+  }, [debouncedSearchQuery])
+
   return (
     <>
       <div className='h-full p-2 flex flex-col gap-6 mb-4'>
@@ -124,11 +140,11 @@ export default function SecondStep({
               strategy={horizontalListSortingStrategy}
             >
               {selectedPlaces!.map((place, index) => (
-                <div key={`mini-${place.id}`} className='relative'>
+                <div key={`mini-${place._id}`} className='relative'>
                   <MiniPlace
                     place={place}
                     removePlace={removePlace}
-                    index={place.id}
+                    index={place._id}
                   />
                 </div>
               ))}
@@ -138,14 +154,19 @@ export default function SecondStep({
             <Plus size={16} />
           </Button>
         </div>
-        <Input placeholder='Search for a location' className='self-start' />
+        <Input
+          placeholder='Search for a location'
+          className='self-start'
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+        />
         <section className='grid grid-cols-2 gap-4 overflow-auto'>
-          {recommendations.map((place, index) =>
+          {displayPlaces.map((place, index) =>
             selectedPlaces!.includes(place) ? (
               <Place
                 key={index}
                 variant='selected'
-                onClick={() => removePlace(place.id)}
+                onClick={() => removePlace(place._id)}
                 {...place}
               />
             ) : (

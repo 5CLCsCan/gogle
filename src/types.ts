@@ -13,7 +13,7 @@ export type Place = {
   latitude: number
   longitude: number
   imgLink: string
-  openTime: string[]
+  openingTime: string[]
   priceRange: number[]
 }
 
