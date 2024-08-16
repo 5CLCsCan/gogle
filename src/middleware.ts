@@ -27,13 +27,14 @@ export async function middleware(request: NextRequest) {
         { status: 401 },
       )
   }
-  request.headers.set("decoded", JSON.stringify(result.payload));
-  return NextResponse.next({ 
-    request : {
-        headers: request.headers
-    }});
+  request.headers.set('decoded', JSON.stringify(result.payload))
+  return NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  })
 }
 
 export const config = {
-  matcher: ["/api/:path((?!auth/signin|auth/signup|test$).*)"],
-};
+  matcher: ['/api/:path((?!auth/signin|auth/signup|test|mail|verify$).*)'],
+}
