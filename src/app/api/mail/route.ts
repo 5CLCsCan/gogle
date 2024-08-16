@@ -2,23 +2,23 @@ import { render } from '@react-email/render'
 
 import WelcomeTemplate from '../../../emails'
 
+import { sendVerifyEmail } from '@/lib/backend/email/verifyEmail'
+
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(request: Request, respond: Response) {
+import { jsonHeader } from '@/lib/backend/header/jsonheader'
+
+export async function POST(request: NextRequest) {
   const { email, username } = await request.json()
 
-  const { data, error } = await resend.emails.send({
-    from: 'Acme <onboarding@resend.dev>',
-    to: [email],
-    subject: 'Thank you for registering with us',
-    html: render(WelcomeTemplate({ userFirstname: username, link: '' })),
-  })
+  const result = await sendVerifyEmail(email, username)
 
-  if (error) {
-    return Response.json({ error }, { status: 500 })
+  if (result.message === 'User not found') {
+    return new NextResponse(JSON.stringify(result), { status: 404 })
+  } else if (result.message === 'Internal Server Error') {
+    return new NextResponse(JSON.stringify(result), { status: 500 })
   }
-
-  return Response.json({ message: 'Email sent successfully' })
+  return new NextResponse(JSON.stringify(result), jsonHeader)
 }

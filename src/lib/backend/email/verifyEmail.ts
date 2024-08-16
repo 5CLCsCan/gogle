@@ -12,13 +12,20 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { expiredDuration } from '../authentication/authentication'
 
+interface verifyEmailData {
+  message: string
+}
+
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-async function sendVerifyEmail(email: string, username: string): Promise<void> {
+async function sendVerifyEmail(
+  email: string,
+  username: string,
+): Promise<verifyEmailData> {
   // find user by email
   const user = await findData(UserModel, { email: email })
   if (!user) {
-    throw new Error('User not found')
+    return { message: 'User not found' } as verifyEmailData
   }
 
   // generate verify token
@@ -39,11 +46,11 @@ async function sendVerifyEmail(email: string, username: string): Promise<void> {
   console.log(email)
 
   if (!updatedUser) {
-    throw new Error('Error updating user')
+    return { message: 'User not found' } as verifyEmailData
   }
 
   const { data, error } = await resend.emails.send({
-    from: 'Gogle <noreply@resend.dev>',
+    from: 'Gogle <noreply@gogle.studio>',
     to: [email],
     subject: 'Thank you for registering with us',
     html: render(WelcomeTemplate({ userFirstname: username, link: link })),
@@ -51,8 +58,10 @@ async function sendVerifyEmail(email: string, username: string): Promise<void> {
 
   if (error) {
     // Handle error
-    throw new Error('Email not sent')
+    return { message: 'Internal Server Error' } as verifyEmailData
   }
+
+  return { message: 'Email sent successfully' } as verifyEmailData
 }
 
 export { sendVerifyEmail }
