@@ -90,7 +90,7 @@ export default function SecondStep({
         placeID: place._id,
         tripID: trip.data._id,
       }
-      const resp = await fetchData('POST', `places`, 0, body)
+      const resp = await fetchData('PUT', `places`, 0, body)
       const data = await resp.json()
       console.log(data)
     }
