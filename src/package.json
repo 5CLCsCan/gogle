@@ -26,8 +26,8 @@
     "@radix-ui/react-slider": "^1.2.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@radix-ui/react-toggle": "^1.1.0",
-    "@react-google-maps/api": "^2.19.3",
     "@react-email/components": "0.0.22",
+    "@react-google-maps/api": "^2.19.3",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
@@ -47,12 +47,14 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-email": "1.10.1",
+    "react-leaflet": "^4.2.1",
     "resend": "^2.1.0",
     "swagger-ui-react": "^5.17.14",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

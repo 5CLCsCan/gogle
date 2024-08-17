@@ -1,4 +1,3 @@
-import Map from '@/components/Map'
 import Place from '@/components/Place'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,6 +14,7 @@ import {
 } from '@dnd-kit/sortable'
 import MiniPlace from '@/components/MiniPlace'
 import { useDebounce } from '@/hooks/useDebounce'
+import { toast } from '@/components/ui/use-toast'
 
 export default function SecondStep({
   selectedPlaces,
@@ -26,10 +26,14 @@ export default function SecondStep({
   const debouncedSearchQuery = useDebounce(searchQuery, 500)
   const [searchedPlaces, setSearchedPlaces] = useState<PlaceType[]>([] as any)
   const [displayPlaces, setDisplayPlaces] = useState<PlaceType[]>([] as any)
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const router = useRouter()
 
   const fetchRecommendations = async (tripID: string) => {
-    const resp = await fetchData('GET', `places?tripID=${tripID}`)
+    const resp = await fetchData('POST', `places?tripID=${tripID}`, 0, {
+      tripID,
+      categories: selectedCategories,
+    })
     const data = await resp.json()
     console.log(data)
 
@@ -53,16 +57,25 @@ export default function SecondStep({
   useEffect(() => {
     if (tripInfo === null) return
     fetchRecommendations(tripInfo._id)
-  }, [tripInfo])
+  }, [tripInfo, selectedCategories])
 
-  const selectPlace = (id: string) => {
+  const selectPlace = async (id: string) => {
     const selectedPlace = displayPlaces.find(place => place._id === id)
     console.log(selectedPlace)
+
+    setSelectedCategories([...selectedCategories, selectedPlace!.category])
     setSelectedPlaces!([...selectedPlaces!, selectedPlace!])
   }
 
   const removePlace = (id: string) => {
     const newPlaces = selectedPlaces!.filter(place => place.id !== id)
+    const removedPlace = selectedPlaces!.find(place => place.id === id)
+
+    setSelectedCategories(
+      selectedCategories.filter(
+        category => category !== removedPlace!.category,
+      ),
+    )
     setSelectedPlaces!(newPlaces)
   }
 
@@ -162,7 +175,7 @@ export default function SecondStep({
         />
         <section className='grid grid-cols-2 gap-4 overflow-auto'>
           {displayPlaces.map((place, index) =>
-            selectedPlaces!.includes(place) ? (
+            selectedPlaces!.some(p => p._id === place._id) ? (
               <Place
                 key={index}
                 variant='selected'
