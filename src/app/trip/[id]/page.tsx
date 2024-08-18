@@ -56,31 +56,36 @@ export default function TripDetails({ params }: TripDetailsPageProps) {
       <div className='flex gap-4 h-[500px] w-3/4'>
         <div className='w-1/2 flex flex-col gap-4'>
           {places.map((place, index) => (
-            <div
-              className={cn(
-                'flex justify-between items-center',
-                index % 2 === 1 ? 'flex-row-reverse text-right' : '',
-              )}
-            >
-              <div key={place.id}>
-                <h3 className='font-semibold text-xl'>{place.name}</h3>
-                <p className='italic text-black/40 text-sm'>{place.address}</p>
-                <p>
-                  {place.priceRange
-                    ? `${formatter.format(
-                        place.priceRange[0],
-                      )} - ${formatter.format(place.priceRange[1])}`
-                    : 'VND 50,000 - VND 100,000'}
-                </p>
+            <>
+              <div
+                className={cn(
+                  'flex justify-between items-center',
+                  index % 2 === 1 ? 'flex-row-reverse text-right' : '',
+                )}
+              >
+                <div key={place.id}>
+                  <h3 className='font-medium text-xl'>{place.name}</h3>
+                  <p className='italic text-black/40 text-sm'>
+                    {place.address}
+                  </p>
+                  <p>
+                    {place.priceRange
+                      ? `${formatter.format(
+                          place.priceRange[0],
+                        )} - ${formatter.format(place.priceRange[1])}`
+                      : 'VND 50,000 - VND 100,000'}
+                  </p>
+                </div>
+                <Image
+                  src={place.imgLink}
+                  alt={place.name}
+                  height={80}
+                  width={80}
+                  className='rounded-full h-20'
+                />
               </div>
-              <Image
-                src={place.imgLink}
-                alt={place.name}
-                height={80}
-                width={80}
-                className='rounded-full h-20'
-              />
-            </div>
+              <hr />
+            </>
           ))}
         </div>
         <div className='w-1/2'>
