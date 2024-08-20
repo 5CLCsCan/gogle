@@ -44,7 +44,7 @@ import dynamic from 'next/dynamic'
 import { useCenterStore, useRadiusStore } from '@/store'
 import { CreatTripStepPageProps } from '@/types'
 
-const createTripSchema = z.object({
+export const createTripSchema = z.object({
   tripName: z.string().min(1),
   startDate: z.date(),
   numberOfPeople: z.coerce.number().int().positive().min(1).max(5),
@@ -57,7 +57,8 @@ const ITEM_PER_ROW = 3
 type Icon = {
   [key: string]: JSX.Element
 }
-const icon: Icon = {
+
+export const icon: Icon = {
   feast: <Utensils />,
   snack: <Sandwich />,
   drink: <Martini />,
