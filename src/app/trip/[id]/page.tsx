@@ -127,8 +127,8 @@ export default function TripDetails({ params }: TripDetailsPageProps) {
   }
 
   function isIncluded(activity: string) {
-    console.log(editTripForm.getValues('favouriteCategories') as string[])
-    console.log(activity)
+    // console.log(editTripForm.getValues('favouriteCategories') as string[])
+    // console.log(activity)
 
     return (
       (editTripForm.getValues('favouriteCategories') as string[]).indexOf(
@@ -146,6 +146,28 @@ export default function TripDetails({ params }: TripDetailsPageProps) {
     [],
   )
 
+  const onSubmit = async (data: any) => {
+    console.log(data)
+    const body = {
+      tripName: data.tripName,
+      userFilter: {
+        date: data.startDate,
+        startTime: data.startTime,
+        numberOfPeople: data.numberOfPeople,
+        favouriteCategories: data.favouriteCategories,
+        budget: data.budget,
+      },
+    }
+    const resp = await fetchData('PUT', `trip/${id}`, 0, body)
+    if (resp.status !== 200) {
+      console.error('Error updating trip')
+      return
+    }
+    const updatedTrip = await resp.json()
+    console.log(updatedTrip)
+    setTrip(updatedTrip)
+  }
+
   return (
     <section className='flex flex-col items-center'>
       <div className='flex w-3/4 items-center mb-5'>
@@ -160,162 +182,170 @@ export default function TripDetails({ params }: TripDetailsPageProps) {
             <SheetHeader>
               <SheetTitle>Changing trip's info</SheetTitle>
               <Form {...editTripForm}>
-                <FormField
-                  control={editTripForm.control}
-                  name='tripName'
-                  render={({ field }) => {
-                    return (
-                      <FormItem>
-                        <FormLabel>Trip's name</FormLabel>
-                        <FormControl>
-                          <Input className='block' type='text' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )
-                  }}
-                />
-                <FormField
-                  control={editTripForm.control}
-                  name='startDate'
-                  render={({ field }) => {
-                    return (
-                      <FormItem className='flex flex-col w-full'>
-                        <FormLabel>Date & time</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={'outline'}
-                                className={cn(
-                                  'pl-3 text-left font-normal',
-                                  !field.value && 'text-muted-foreground',
-                                )}
-                              >
-                                {field.value ? (
-                                  format(field.value, 'PPP')
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent
-                            className='w-auto p-0 z-[9999]'
-                            align='start'
-                          >
-                            <Calendar
-                              mode='single'
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={date => date < new Date()}
-                              initialFocus
+                <form
+                  onSubmit={editTripForm.handleSubmit(onSubmit)}
+                  id='edit-form'
+                >
+                  <FormField
+                    control={editTripForm.control}
+                    name='tripName'
+                    render={({ field }) => {
+                      return (
+                        <FormItem>
+                          <FormLabel>Trip's name</FormLabel>
+                          <FormControl>
+                            <Input className='block' type='text' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )
+                    }}
+                  />
+                  <FormField
+                    control={editTripForm.control}
+                    name='startDate'
+                    render={({ field }) => {
+                      return (
+                        <FormItem className='flex flex-col w-full'>
+                          <FormLabel>Date & time</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant={'outline'}
+                                  className={cn(
+                                    'pl-3 text-left font-normal',
+                                    !field.value && 'text-muted-foreground',
+                                  )}
+                                >
+                                  {field.value ? (
+                                    format(field.value, 'PPP')
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                  <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className='w-auto p-0 z-[9999]'
+                              align='start'
+                            >
+                              <Calendar
+                                mode='single'
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                disabled={date => date < new Date()}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </FormItem>
+                      )
+                    }}
+                  />
+                  <FormField
+                    control={editTripForm.control}
+                    name='startTime'
+                    render={({ field }) => {
+                      return (
+                        <FormItem className='flex-1'>
+                          <FormLabel>From</FormLabel>
+                          <FormControl>
+                            <Input className='w-full' type='time' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )
+                    }}
+                  />
+                  <FormField
+                    control={editTripForm.control}
+                    name='numberOfPeople'
+                    render={({ field }) => {
+                      return (
+                        <FormItem className='flex-1'>
+                          <FormLabel>Total people</FormLabel>
+                          <FormControl>
+                            <Input
+                              className='block'
+                              type='number'
+                              min='1'
+                              max='5'
+                              {...field}
                             />
-                          </PopoverContent>
-                        </Popover>
-                      </FormItem>
-                    )
-                  }}
-                />
-                <FormField
-                  control={editTripForm.control}
-                  name='startTime'
-                  render={({ field }) => {
-                    return (
-                      <FormItem className='flex-1'>
-                        <FormLabel>From</FormLabel>
-                        <FormControl>
-                          <Input className='w-full' type='time' {...field} />
-                        </FormControl>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )
+                    }}
+                  />
+                  <FormField
+                    control={editTripForm.control}
+                    name='favouriteCategories'
+                    render={() => (
+                      <FormItem>
+                        <FormLabel>Activities</FormLabel>
+                        <div className='grid grid-cols-3 items-center gap-3'>
+                          {activities.map((activity, i) => {
+                            return (
+                              <Toggle
+                                pressed={isIncluded(activity)}
+                                className='flex gap-2 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground'
+                                key={activity}
+                                variant='outline'
+                                onClick={() => {
+                                  updateSelectedActivities({
+                                    target: {
+                                      value: activity,
+                                    },
+                                  })
+                                }}
+                              >
+                                <div className='flex gap-2 items-center'>
+                                  {icon[activity]}
+                                  {activity}
+                                </div>
+                              </Toggle>
+                            )
+                          })}
+                        </div>
                         <FormMessage />
                       </FormItem>
-                    )
-                  }}
-                />
-                <FormField
-                  control={editTripForm.control}
-                  name='numberOfPeople'
-                  render={({ field }) => {
-                    return (
-                      <FormItem className='flex-1'>
-                        <FormLabel>Total people</FormLabel>
+                    )}
+                  />
+                  <FormField
+                    control={editTripForm.control}
+                    name='budget'
+                    render={({ field }) => (
+                      <FormItem className='space-y-3'>
+                        <FormLabel>Budget: {field.value}</FormLabel>
                         <FormControl>
-                          <Input
-                            className='block'
-                            type='number'
-                            min='1'
-                            max='5'
-                            {...field}
+                          <Slider
+                            onValueChange={values => {
+                              const value = values[0]
+                              if (value === 33) {
+                                field.onChange('Economy')
+                              } else if (value === 66) {
+                                field.onChange('Standard')
+                              } else {
+                                field.onChange('Luxury')
+                              }
+                            }}
+                            defaultValue={[budgetStringToNumber[field.value]]}
+                            max={99}
+                            step={33}
+                            min={33}
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
-                    )
-                  }}
-                />
-                <FormField
-                  control={editTripForm.control}
-                  name='favouriteCategories'
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>Activities</FormLabel>
-                      <div className='grid grid-cols-3 items-center gap-3'>
-                        {activities.map((activity, i) => {
-                          return (
-                            <Toggle
-                              pressed={isIncluded(activity)}
-                              className='flex gap-2 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground'
-                              key={activity}
-                              variant='outline'
-                              onClick={() => {
-                                updateSelectedActivities({
-                                  target: {
-                                    value: activity,
-                                  },
-                                })
-                              }}
-                            >
-                              <div className='flex gap-2 items-center'>
-                                {icon[activity]}
-                                {activity}
-                              </div>
-                            </Toggle>
-                          )
-                        })}
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={editTripForm.control}
-                  name='budget'
-                  render={({ field }) => (
-                    <FormItem className='space-y-3'>
-                      <FormLabel>Budget: {field.value}</FormLabel>
-                      <FormControl>
-                        <Slider
-                          onValueChange={values => {
-                            const value = values[0]
-                            if (value === 33) {
-                              field.onChange('Economy')
-                            } else if (value === 66) {
-                              field.onChange('Standard')
-                            } else {
-                              field.onChange('Luxury')
-                            }
-                          }}
-                          defaultValue={[budgetStringToNumber[field.value]]}
-                          max={99}
-                          step={33}
-                          min={33}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    )}
+                  />
+                </form>
+                <Button type='submit' form='edit-form'>
+                  Save
+                </Button>
               </Form>
             </SheetHeader>
           </SheetContent>
