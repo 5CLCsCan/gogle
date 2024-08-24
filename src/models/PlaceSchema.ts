@@ -70,6 +70,6 @@ const PlaceSchema: Schema<IPlace> = new Schema({
 });
 
 // Define the Place model
-const Places: Model<IPlace> = mongoose.models.places_tests || mongoose.model<IPlace>('places_tests', PlaceSchema);
+const Places: Model<IPlace> = mongoose.models.places_tests || mongoose.model<IPlace>('places_new_1', PlaceSchema);
 
 export default Places;
