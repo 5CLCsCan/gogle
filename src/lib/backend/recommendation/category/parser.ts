@@ -64,3 +64,10 @@ export async function parseUserFilter(search_params: URLSearchParams): Promise<U
     }
     return filter;
 }
+
+export function parseTime(time: string): number {
+    const timeArray = time.split(':');
+    const hours = parseInt(timeArray[0]);
+    const minutes = parseInt(timeArray[1]);
+    return Math.round((hours + minutes / 60) * 100) / 100;
+}

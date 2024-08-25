@@ -3,6 +3,7 @@ import createTrip, { CreateTripData } from '@/lib/backend/updateData/createTrip'
 import removeTrip, { RemoveTripData } from '@/lib/backend/updateData/removeTrip'
 import getTrips from '@/lib/backend/updateData/getTrips'
 import fetchUserIDByToken from '@/lib/backend/updateData/getUserID'
+import { parseTime } from '@/lib/backend/recommendation/category/parser'
 
 const database = require('@/lib/backend/database')
 
@@ -284,7 +285,7 @@ export async function POST(req: NextRequest) {
       userID: userID,
       tripName: parseData.tripName,
       startDate: parseData.startDate,
-      startTime: parseData.startTime,
+      startTime: parseTime(parseData.startTime),
       tripLength: parseData.tripLength,
       numberOfPeople: parseData.numberOfPeople,
       budget: parseData.budget,
@@ -292,6 +293,7 @@ export async function POST(req: NextRequest) {
       latitude: parseData.latitude,
       longitude: parseData.longitude,
     }
+    console.log(data)
     const respone = await createTrip(data)
     return new Response(JSON.stringify({ status: true, data: respone }))
   } catch (error) {
