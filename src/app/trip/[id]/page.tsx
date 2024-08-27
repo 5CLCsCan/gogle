@@ -174,7 +174,7 @@ export default function TripDetails({ params }: TripDetailsPageProps) {
           </SheetTrigger>
           <SheetContent>
             <SheetHeader>
-              <SheetTitle>Changing trip's info</SheetTitle>
+              <SheetTitle>Changing trip&#39;s info</SheetTitle>
               <Form {...editTripForm}>
                 <form
                   onSubmit={editTripForm.handleSubmit(onSubmit)}
@@ -186,7 +186,7 @@ export default function TripDetails({ params }: TripDetailsPageProps) {
                     render={({ field }) => {
                       return (
                         <FormItem>
-                          <FormLabel>Trip's name</FormLabel>
+                          <FormLabel>Trip&#39;s name</FormLabel>
                           <FormControl>
                             <Input className='block' type='text' {...field} />
                           </FormControl>
