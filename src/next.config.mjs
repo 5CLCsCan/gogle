@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'images.foody.vn',
+        hostname: 'down-vn.img.susercontent.com',
         port: '',
         pathname: '**/*',
       },

@@ -149,23 +149,17 @@ export default function TripDetails({ params }: TripDetailsPageProps) {
   const onSubmit = async (data: any) => {
     console.log(data)
     const body = {
-      tripName: data.tripName,
-      userFilter: {
-        date: data.startDate,
-        startTime: data.startTime,
-        numberOfPeople: data.numberOfPeople,
-        favouriteCategories: data.favouriteCategories,
-        budget: data.budget,
-      },
+      newTripName: data.tripName,
+      newStartTime: data.startTime,
+      newDate: data.startDate,
     }
-    const resp = await fetchData('PUT', `trip/${id}`, 0, body)
+    const resp = await fetchData('PATCH', `trip/${id}`, 0, body)
     if (resp.status !== 200) {
       console.error('Error updating trip')
       return
     }
-    const updatedTrip = await resp.json()
-    console.log(updatedTrip)
-    setTrip(updatedTrip)
+
+    window.location.reload()
   }
 
   return (
@@ -268,6 +262,7 @@ export default function TripDetails({ params }: TripDetailsPageProps) {
                           <FormLabel>Total people</FormLabel>
                           <FormControl>
                             <Input
+                              disabled
                               className='block'
                               type='number'
                               min='1'
@@ -291,16 +286,10 @@ export default function TripDetails({ params }: TripDetailsPageProps) {
                             return (
                               <Toggle
                                 pressed={isIncluded(activity)}
+                                disabled
                                 className='flex gap-2 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground'
                                 key={activity}
                                 variant='outline'
-                                onClick={() => {
-                                  updateSelectedActivities({
-                                    target: {
-                                      value: activity,
-                                    },
-                                  })
-                                }}
                               >
                                 <div className='flex gap-2 items-center'>
                                   {icon[activity]}
@@ -322,6 +311,7 @@ export default function TripDetails({ params }: TripDetailsPageProps) {
                         <FormLabel>Budget: {field.value}</FormLabel>
                         <FormControl>
                           <Slider
+                            disabled
                             onValueChange={values => {
                               const value = values[0]
                               if (value === 33) {
