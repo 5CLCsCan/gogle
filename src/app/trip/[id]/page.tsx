@@ -24,7 +24,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { createTripSchema, icon } from '@/app/create/page'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import {
@@ -38,6 +37,8 @@ import { format } from 'date-fns'
 import { Input } from '@/components/ui/input'
 import { Toggle } from '@/components/ui/toggle'
 import { Slider } from '@/components/ui/slider'
+import { icon } from '@/utils/icon'
+import { z } from 'zod'
 
 type TripDetailsPageProps = {
   params: {
@@ -52,6 +53,15 @@ const budgetStringToNumber: {
   Standard: 66,
   Luxury: 99,
 }
+
+const createTripSchema = z.object({
+  tripName: z.string().min(1),
+  startDate: z.date(),
+  numberOfPeople: z.coerce.number().int().positive().min(1).max(5),
+  startTime: z.string(),
+  budget: z.string(),
+  favouriteCategories: z.string().array(),
+})
 
 export default function TripDetails({ params }: TripDetailsPageProps) {
   const [trip, setTrip] = useState<Trip>({} as Trip)

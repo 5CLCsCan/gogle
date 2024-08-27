@@ -18,16 +18,7 @@ import {
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
-import {
-  ArrowRight,
-  CalendarIcon,
-  LoaderCircle,
-  Martini,
-  Sandwich,
-  Store,
-  TentTree,
-  Utensils,
-} from 'lucide-react'
+import { ArrowRight, CalendarIcon, LoaderCircle } from 'lucide-react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -43,8 +34,9 @@ import { Place } from '@/types'
 import dynamic from 'next/dynamic'
 import { useCenterStore, useRadiusStore } from '@/store'
 import { CreatTripStepPageProps } from '@/types'
+import { icon } from '@/utils/icon'
 
-export const createTripSchema = z.object({
+const createTripSchema = z.object({
   tripName: z.string().min(1),
   startDate: z.date(),
   numberOfPeople: z.coerce.number().int().positive().min(1).max(5),
@@ -54,17 +46,6 @@ export const createTripSchema = z.object({
 })
 
 const ITEM_PER_ROW = 3
-type Icon = {
-  [key: string]: JSX.Element
-}
-
-export const icon: Icon = {
-  feast: <Utensils />,
-  snack: <Sandwich />,
-  drink: <Martini />,
-  outdoor: <TentTree />,
-  indoor: <Store />,
-}
 
 const Steps = [
   (props: CreatTripStepPageProps) => <FirstStep {...props} />,
