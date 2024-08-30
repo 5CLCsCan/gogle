@@ -1,4 +1,4 @@
-const URL = 'http://localhost:3000/api'
+const URL = process.env.VERCEL_URL
 
 const updateToken = async () => {
   const response = await fetch(`${URL}/auth/gettoken`, {
