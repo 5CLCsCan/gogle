@@ -1,4 +1,4 @@
-const URL = process.env.VERCEL_URL
+const URL = 'https://www.gogle.studio/api'
 
 const updateToken = async () => {
   const response = await fetch(`${URL}/auth/gettoken`, {
