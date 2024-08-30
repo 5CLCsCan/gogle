@@ -16,18 +16,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from './ui/dialog'
+import { formatter } from '@/lib/utils'
 
 interface PlaceProps extends PlaceType {
   variant?: 'selected' | 'default'
   onClick: (id: string) => void
 }
-
-const formatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'VND',
-  notation: 'compact',
-  compactDisplay: 'short',
-})
 
 export default function Place({
   name,

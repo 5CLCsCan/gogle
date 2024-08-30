@@ -1,4 +1,4 @@
-const URL = 'http://localhost:3000/api'
+const URL = 'https://gogle.studio/api'
 
 const updateToken = async () => {
   const response = await fetch(`${URL}/auth/gettoken`, {
