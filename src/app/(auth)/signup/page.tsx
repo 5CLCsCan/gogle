@@ -19,6 +19,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 import { withPublic } from '@/utils/withPublic'
+import { Toaster } from '@/components/ui/toaster'
+import { useToast } from '@/components/ui/use-toast'
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '600'] })
 
@@ -34,6 +36,7 @@ const loginSchema = z.object({
 
 function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false)
+  const { toast } = useToast()
   const loginForm = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -71,9 +74,10 @@ function SignUpPage() {
       return
     }
 
-    const data = await respone.json()
-    localStorage.setItem('accessToken', data.token)
-    window.location.href = '/'
+    toast({
+      title: 'Account created',
+      description: 'Please check your email to verify your account',
+    })
   }
 
   return (
@@ -83,6 +87,7 @@ function SignUpPage() {
         poppins.className,
       )}
     >
+      <Toaster />
       <Form {...loginForm}>
         <form
           onSubmit={loginForm.handleSubmit(onSubmit)}

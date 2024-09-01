@@ -43,9 +43,9 @@ export const GogleWelcomeEmail = ({
           explore with Gogle.
         </Text>
         <Section style={btnContainer}>
-          <Button style={button} href={link}>
+          <a style={button} href={link}>
             Get started
-          </Button>
+          </a>
         </Section>
         <Text style={paragraph}>
           Best regard,

@@ -1,4 +1,4 @@
-const URL = 'https://www.gogle.studio/api'
+const URL = process.env.NEXT_PUBLIC_VERCEL_DOMAIN
 
 const updateToken = async () => {
   const response = await fetch(`${URL}/auth/gettoken`, {
@@ -22,6 +22,8 @@ export const fetchData = async (
     throw new Error('Cannot get token')
   }
   console.log(body)
+  console.log(`${URL}, ${endpoint}`)
+  console.log(process.env.NEXT_PUBLIC_VERCEL_DOMAIN)
 
   const response = await fetch(`${URL}/${endpoint}`, {
     method: method,

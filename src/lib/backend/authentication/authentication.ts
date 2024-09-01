@@ -6,7 +6,7 @@ import { Payload } from './jwt'
 import { cookies } from 'next/headers'
 import { sendVerifyEmail } from '../email/verifyEmail'
 
-const expiredDuration = 1000
+const expiredDuration = 24 * 60 * 60 * 1000
 
 interface RegisterUserData {
   username: string
