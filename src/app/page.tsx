@@ -60,8 +60,8 @@ export default function Home() {
             </Button>
           </div>
           <img
-            className='hidden lg:block'
-            src='https://placeholder.co/500'
+            className='hidden lg:block w-[500px]'
+            src='/hero.jpeg'
             alt='placeholder'
           />
         </div>
@@ -92,8 +92,8 @@ export default function Home() {
         </motion.h2>
         <div className='grid grid-cols-7 grid-rows-2 gap-4 auto-rows-min'>
           <motion.img
-            src='https://placeholder.co/600?text='
-            className='row-span-2 col-span-3 rounded-3xl block h-full'
+            src='/trip1.jpeg'
+            className='row-span-2 col-span-3 rounded-3xl block h-[600px]'
             initial={{
               opacity: 0,
               x: -100,
@@ -105,8 +105,8 @@ export default function Home() {
             {...motionProps}
           ></motion.img>
           <motion.img
-            src='https://placeholder.co/600x300?text='
-            className='col-span-4 rounded-3xl block'
+            src='/trip2.jpg'
+            className='col-span-4 rounded-3xl block w-[600px]'
             initial={{
               opacity: 0,
               x: 100,
@@ -118,8 +118,8 @@ export default function Home() {
             {...motionProps}
           ></motion.img>
           <motion.img
-            src='https://placeholder.co/600x300?text='
-            className='col-span-4 rounded-3xl block'
+            src='/trip3.jpg'
+            className='col-span-4 rounded-3xl block w-[600px]'
             initial={{
               opacity: 0,
               x: 100,
