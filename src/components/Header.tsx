@@ -20,7 +20,7 @@ export default function Header() {
 
   return (
     <header className='flex justify-between px-24 py-8'>
-      <img src='/logo.svg' alt='logo' />
+      <img src='/logo.png' alt='logo' className='h-[50px]' />
       {isLoading ? (
         <></>
       ) : (
