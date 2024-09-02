@@ -5,13 +5,13 @@ async function getSearchQuery(query: string, limit: number = 10): Promise<any> {
   try {
     const db = await connectDB()
 
-    const collection = db.connection.collection('places') // Replace with your actual collection name
+    const collection = db.connection.collection('places_new_1') // Replace with your actual collection name
 
     const result = await collection
       .aggregate([
         {
           $search: {
-            index: 'searchLocation',
+            index: 'newSearchLocation',
             text: {
               query: query,
               path: ['name', 'address', 'category'], // Specify the fields to search
