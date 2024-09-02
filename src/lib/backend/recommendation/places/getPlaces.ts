@@ -5,7 +5,7 @@ import TripModel, { ITrip } from '@/models/TripSchema';
 import getRecommendCategory from "@/lib/backend/recommendation/category/getRecommendCategory";
 import IGetRCMPlaceData from "@/lib/backend/recommendation/category/IGetRCMdata";
 
-const LimitPlace = 10;
+const LimitPlace = 30;
 const LimitPlacePerCategory = LimitPlace / 3;
 const freeTag = 0;
 const economyTag = 1;
