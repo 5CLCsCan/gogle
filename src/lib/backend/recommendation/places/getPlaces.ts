@@ -7,12 +7,17 @@ import IGetRCMPlaceData from "@/lib/backend/recommendation/category/IGetRCMdata"
 
 const LimitPlace = 10;
 const LimitPlacePerCategory = LimitPlace / 3;
+const freeTag = 0;
+const economyTag = 1;
+const standardTag = 2;
+const luxuryTag = 3;
 
 interface QueryOptions {
     lat: number;
     long: number;
     radius?: number;
     time?: number;
+    budget?: string;
     category_list: string[];
     place_visited: string[];   
 }
@@ -60,6 +65,39 @@ function validPlace(place: IPlace, query: QueryOptions): boolean {
     return true;
 }
 
+function getPriceTag(budget: string | undefined): number {
+    if (!budget) return 0;
+    switch (budget) {
+        case 'Economy':
+            return economyTag;
+        case 'Standard':
+            return standardTag;
+        case 'Luxury':
+            return luxuryTag;
+        default:
+            return freeTag;
+    }
+}
+
+function enrichCategory(placeQuery: any, categoryQuery: string): void {
+    placeQuery.category = categoryQuery;
+}
+
+function enrichOpeningTime(placeQuery: any, timeQuery: number | undefined): void {
+    if (timeQuery) {
+        let key = `open_${timeQuery}`;
+        placeQuery[key] = 1;
+    }
+}
+
+function enrichPriceTag(placeQuery: any, priceTag: number): void {
+    if (priceTag !== luxuryTag) {
+        placeQuery.priceTag = { $in: [priceTag, freeTag] };
+        return;
+    }
+    placeQuery.priceTag = { $eq: priceTag };
+}
+
 async function getPlacesbyQuery(query: QueryOptions): Promise<IPlace[]> {
     let gridId: GridId = utils.getGridID(query.lat, query.long);
     let gridLimit: number | null = getLimitGrid(gridId, query?.radius ?? null);
@@ -71,14 +109,14 @@ async function getPlacesbyQuery(query: QueryOptions): Promise<IPlace[]> {
             gridY: { $gte: gridId.gridY - gridLimit, $lte: gridId.gridY + gridLimit }
         }
     }
+    let priceTag = getPriceTag(query.budget);
     for (let i = 0; i < query.category_list.length; i++) {
         let category = query.category_list[i];
         let queryByCat = query_db;
-        queryByCat.category = category;
-        if (query.time) {
-            let key = `open_${query.time}`;
-            queryByCat[key] = 1;
-        }
+        enrichCategory(queryByCat, category);
+        enrichOpeningTime(queryByCat, query.time);
+        enrichPriceTag(queryByCat, priceTag);
+        
         let numPlaces = LimitPlacePerCategory;
         let placesByCat: IPlace[] | null = await database.findData(Places, queryByCat, numPlaces * 2);
         if (!placesByCat || placesByCat.length === 0) {
@@ -126,6 +164,7 @@ export async function getPlaces(rcm_data: IGetRCMPlaceData) : Promise<IPlaceProj
         radius: trip[0].userFilter?.maxDistance ?? undefined,
         category_list: categories,
         place_visited: trip[0].locationsID,
+        budget: trip[0].userFilter?.budget ?? undefined,
         time: trip[0].userFilter.startTime !== undefined ? Math.ceil(trip[0].userFilter.startTime as number) : undefined
     };
     let places = await getPlacesbyQuery(query);

@@ -20,13 +20,16 @@ export default function Header() {
 
   return (
     <header className='flex justify-between px-24 py-8'>
-      <img src='/logo.svg' alt='logo' />
+      <img src='/logo.png' alt='logo' className='h-[50px]' />
       {isLoading ? (
         <></>
       ) : (
         <div className='flex gap-2'>
           {accessToken ? (
             <>
+              <Button variant='default'>
+                <Link href={'/create'}>Create trip</Link>
+              </Button>
               <Button className='bg-transparent text-md hover:bg-transparent rounded-full text-primary hover:opacity-80'>
                 <Link href={'/home'}>Home</Link>
               </Button>
