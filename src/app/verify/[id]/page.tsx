@@ -15,7 +15,7 @@ export default function VerifyPage({ params }: VerifyPageProps) {
 
   useEffect(() => {
     const verify = async () => {
-      const data = await fetchData('GET', `api/verify?token=${id}`)
+      const data = await fetchData('GET', `verify?token=${id}`)
       if (data.status === 200) {
         setIsLoading(false)
       }
