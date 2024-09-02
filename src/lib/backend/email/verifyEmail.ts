@@ -17,6 +17,7 @@ interface verifyEmailData {
 }
 
 const resend = new Resend(process.env.RESEND_API_KEY)
+const domain = process.env.NEXT_PUBLIC_VERCEL_DOMAIN?.split('/api')[0]
 
 async function sendVerifyEmail(
   email: string,
@@ -34,7 +35,7 @@ async function sendVerifyEmail(
   // expiration time
   const verifyTokenExpires = new Date(Date.now() + expiredDuration)
 
-  const link = `${process.env.NEXT_PUBLIC_VERCEL_DOMAIN}/verify/${verifyToken}`
+  const link = `${domain}/verify/${verifyToken}`
 
   // save verify token to user
   const updatedUser = await findAndUpdateData(
