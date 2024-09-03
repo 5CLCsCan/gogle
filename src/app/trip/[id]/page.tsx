@@ -91,6 +91,13 @@ export default function TripDetails({ params }: TripDetailsPageProps) {
       console.log(data)
 
       setTrip(data.trip)
+      data.places.forEach((place: Place) => {
+        if (place.priceRange) {
+          if (place.priceRange[0] === -1) {
+            place.priceRange = undefined as any
+          }
+        }
+      })
       setPlaces(data.places)
       editTripForm.setValue('tripName', data.trip.tripName)
       editTripForm.setValue('startDate', new Date(data.trip.userFilter.date))
@@ -371,7 +378,7 @@ export default function TripDetails({ params }: TripDetailsPageProps) {
                       ? `${formatter.format(
                           place.priceRange[0],
                         )} - ${formatter.format(place.priceRange[1])}`
-                      : 'VND 50,000 - VND 100,000'}
+                      : 'VND 0 - VND 100,000'}
                   </p>
                 </div>
                 <Image

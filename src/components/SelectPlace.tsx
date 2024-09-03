@@ -99,6 +99,11 @@ export default function SelectPageComponent({
       console.log(data)
       data.forEach((place: PlaceType, index: number) => {
         place.id = place._id
+        if (place.priceRange) {
+          if (place.priceRange[0] === -1) {
+            place.priceRange = undefined as any
+          }
+        }
       })
 
       setSearchedPlaces(data)
